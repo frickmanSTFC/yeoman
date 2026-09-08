@@ -393,7 +393,7 @@ for (const [btn, sec] of Object.entries(tabs)) {
   };
 }
 // #loot, #mile, #bat, #set open that tab (bookmarkable)
-{ const b = document.getElementById("nav" + location.hash.slice(1, 2).toUpperCase() + location.hash.slice(2)); if (b) b.click(); }
+addEventListener("DOMContentLoaded", () => { const b = document.getElementById("nav" + location.hash.slice(1, 2).toUpperCase() + location.hash.slice(2)); if (b) b.click(); });
 
 // --- settings tab ------------------------------------------------------
 const SET = {

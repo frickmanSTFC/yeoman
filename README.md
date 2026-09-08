@@ -22,6 +22,8 @@ tab, updated every few seconds while you play. Nothing leaves your machine.
 
 ![Battles tab](docs/img/bat.png)
 
+![Settings tab](docs/img/set.png)
+
 ## How it works
 
 Two parts:
