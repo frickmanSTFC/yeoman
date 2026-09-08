@@ -1,0 +1,64 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Check out Yeoman
+        uses: actions/checkout@v4
+
+      - name: Check out the mod fork (branch yeoman)
+        uses: actions/checkout@v4
+        with:
+          repository: frickmanSTFC/stfc-mod
+          ref: yeoman
+          path: stfc-mod
+
+      - name: Set up xmake
+        uses: xmake-io/github-action-setup-xmake@v1
+        with:
+          xmake-version: latest
+
+      - name: Build the mod
+        working-directory: stfc-mod
+        run: xmake -y
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build Yeoman.exe
+        working-directory: viewer
+        run: |
+          pip install pyinstaller UnityPy
+          powershell -ExecutionPolicy Bypass -File build.ps1
+
+      - name: Zip
+        id: zip
+        shell: pwsh
+        run: |
+          $ver = (Select-String -Path viewer/paths.py -Pattern 'VERSION\s*=\s*"([^"]+)"').Matches[0].Groups[1].Value
+          $name = "Yeoman-" + ($ver -replace ' ', '-') + ".zip"
+          New-Item -ItemType Directory out | Out-Null
+          Copy-Item viewer/dist/Yeoman.exe, viewer/README.md out/
+          Copy-Item LICENSE out/LICENSE.txt
+          Compress-Archive -Path out/* -DestinationPath $name
+          "name=$name" >> $env:GITHUB_OUTPUT
+          "ver=$ver" >> $env:GITHUB_OUTPUT
+
+      - name: Replace the "latest" release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: pwsh
+        run: |
+          gh release delete latest --yes --cleanup-tag 2>$null; $global:LASTEXITCODE = 0
+          gh release create latest "${{ steps.zip.outputs.name }}" --title "Yeoman ${{ steps.zip.outputs.ver }}" --notes "Built from ${{ github.sha }}. Unzip, close the game, run Yeoman.exe once, start the game."

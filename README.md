@@ -41,7 +41,7 @@ The page is plain HTML and JavaScript, no framework. The server is Python's stan
 ## Install
 
 1. Close the game.
-2. Download the latest zip from [releases/](releases/) and unzip `Yeoman.exe` into a folder of its own, for example `C:\Yeoman`.
+2. Download the zip from the [latest release](https://github.com/frickmanSTFC/yeoman/releases/latest) and unzip `Yeoman.exe` into a folder of its own, for example `C:\Yeoman`.
 3. Run `Yeoman.exe`. The first run asks for the game folder if it is not in the usual place, copies the
    mod into the game folder (any existing `version.dll` is kept as a `.bak` file), then stops.
 4. Start the game and play for a minute so the mod writes its first logs.
@@ -96,14 +96,18 @@ cd stfc-mod
 xmake -y
 ```
 
-That produces `build\windowsdelease\stfc-community-mod.dll`. Then build the exe:
+That produces `build\windowsd
+elease\stfc-community-mod.dll`. Then build the exe:
 
 ```
 cd ..\yeomaniewer
 powershell -ExecutionPolicy Bypass -File build.ps1
 ```
 
-Result: `viewer\dist\Yeoman.exe`. Zip it with `viewer\README.md` and the `LICENSE` file to make a release.
+Result: `viewer\dist\Yeoman.exe`.
+
+Releases are built by [GitHub Actions](.github/workflows/build.yml): every push to `main` runs the same
+steps on a clean Windows runner and replaces the single `latest` release with the new zip.
 
 ### Running from source instead
 
