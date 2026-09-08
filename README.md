@@ -41,7 +41,7 @@ The page is plain HTML and JavaScript, no framework. The server is Python's stan
 ## Install
 
 1. Close the game.
-2. Download the latest `Yeoman-x.y.zip` and unzip `Yeoman.exe` into a folder of its own, for example `C:\Yeoman`.
+2. Download the latest zip from [releases/](releases/) and unzip `Yeoman.exe` into a folder of its own, for example `C:\Yeoman`.
 3. Run `Yeoman.exe`. The first run asks for the game folder if it is not in the usual place, copies the
    mod into the game folder (any existing `version.dll` is kept as a `.bak` file), then stops.
 4. Start the game and play for a minute so the mod writes its first logs.
@@ -61,7 +61,51 @@ Details, settings and file locations: [viewer/README.md](viewer/README.md).
 - [UnityPy](https://github.com/K0lb3/UnityPy), MIT. Reads the game's icon bundles.
 - [Il2CppDumper](https://github.com/Perfare/Il2CppDumper) for finding the game's classes and fields.
 
-## Running from source
+## Building it yourself
+
+Two repositories, side by side in one folder. The build script looks for the mod at `..\stfc-mod`.
+
+```
+C:\DEV\STFC  yeoman\      this repository
+  stfc-mod\    the mod fork, branch yeoman
+```
+
+### What you need
+
+- Windows 10 or 11, 64-bit.
+- [Git](https://git-scm.com/).
+- [Python 3.10+](https://www.python.org/downloads/) with `pip install UnityPy pyinstaller`.
+- [xmake](https://xmake.io/) (the mod's build tool).
+- The Microsoft C++ compiler. Either Visual Studio 2022 with the "Desktop development with C++" workload,
+  or the standalone [Build Tools for Visual Studio 2022](https://visualstudio.microsoft.com/visual-cpp-build-tools/).
+  In the installer, also tick the **Windows 11 SDK** under Individual Components; older SDKs fail with a
+  coroutine header error. The mod's own [CONTRIBUTING.md](https://github.com/netniV/stfc-mod/blob/main/CONTRIBUTING.md) has more.
+
+### Steps
+
+```
+cd C:\DEV\STFC
+git clone https://github.com/frickmanSTFC/yeoman.git
+git clone -b yeoman https://github.com/frickmanSTFC/stfc-mod.git
+```
+
+Build the mod (first run downloads its dependencies, a few minutes):
+
+```
+cd stfc-mod
+xmake -y
+```
+
+That produces `build\windowsdelease\stfc-community-mod.dll`. Then build the exe:
+
+```
+cd ..\yeomaniewer
+powershell -ExecutionPolicy Bypass -File build.ps1
+```
+
+Result: `viewer\dist\Yeoman.exe`. Zip it with `viewer\README.md` and the `LICENSE` file to make a release.
+
+### Running from source instead
 
 ```
 cd viewer
@@ -69,8 +113,14 @@ pip install UnityPy
 python app.py
 ```
 
-Build the exe with `viewer\build.ps1` (needs `pip install pyinstaller` and a release build of the mod
-fork in `..\stfc-mod`, made with `xmake -y`).
+The mod still comes from the exe build, so build that once, or copy `stfc-community-mod.dll` to
+`<game>ersion.dll` by hand.
+
+### After a game update
+
+The game's code changes, so the mod's hooks need checking. Rebuild the mod, then the exe.
+[Il2CppDumper](https://github.com/Perfare/Il2CppDumper) on the game's `GameAssembly.dll` gives the class
+and field names to check against `mods\src\patches\partsleet_export.cc` and `sync.cc`.
 
 ## License
 
