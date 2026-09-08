@@ -17,7 +17,7 @@ try {
   python -m PyInstaller --noconfirm --onefile --name Yeoman --console `
     --distpath (Join-Path $here "dist") --workpath (Join-Path $here "build\pyi") --specpath (Join-Path $here "build") `
     --add-data "$stage\web;web" --add-data "$stage\mod;mod" `
-    --collect-all UnityPy --collect-all fmod_toolkit `
+    --collect-all UnityPy --collect-all fmod_toolkit --collect-all archspec `
     app.py
 } finally { Pop-Location }
 Write-Host "built: $(Join-Path $here 'dist\Yeoman.exe')"
