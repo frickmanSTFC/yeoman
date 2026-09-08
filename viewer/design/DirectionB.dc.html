@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+  <style>
+    body { margin: 0; background: #f6f4ee; }
+    a { color: #4c4ddb; } a:hover { color: #3536b3; }
+    table { border-collapse: collapse; width: 100%; }
+    th { text-align: left; font: 500 12px/1.2 'IBM Plex Sans', 'Segoe UI', sans-serif; color: #7a766c; padding: 10px 14px; border-bottom: 1px solid #e3dfd4; }
+    td { font: 400 14px/1.35 'IBM Plex Sans', 'Segoe UI', sans-serif; color: #1c1a17; padding: 12px 14px; border-bottom: 1px solid #ece9e1; white-space: nowrap; }
+    td.num { text-align: right; font-variant-numeric: tabular-nums; }
+    .chip { display: inline-block; padding: 3px 10px; border-radius: 999px; font: 500 12px/1.4 'IBM Plex Sans', sans-serif; }
+    .ship { font-weight: 600; }
+    .tier { color: #7a766c; }
+  </style>
+</helmet>
+<div style="width: 1280px; height: 760px; box-sizing: border-box; padding: 32px 44px; display: flex; flex-direction: column; gap: 26px; background: #f6f4ee; color: #1c1a17; font-family: 'IBM Plex Sans', 'Segoe UI', sans-serif;">
+
+  <div style="display: flex; align-items: center; justify-content: space-between;">
+    <div>
+      <div style="font: 700 30px/1.1 'Source Serif 4', Georgia, serif; color: #1c1a17;">Fleet Command Companion</div>
+      <div style="font-size: 13px; color: #7a766c; margin-top: 4px;">Live from your game · updated 3 seconds ago</div>
+    </div>
+    <div style="display: flex; gap: 6px; background: #ece9e1; padding: 4px; border-radius: 10px;">
+      <div style="padding: 8px 16px; font-size: 14px; font-weight: 600; color: #1c1a17; background: #ffffff; border-radius: 7px; box-shadow: 0 1px 2px rgba(28,26,23,.08);">Fleets</div>
+      <div style="padding: 8px 16px; font-size: 14px; color: #5c584f;">Loot</div>
+      <div style="padding: 8px 16px; font-size: 14px; color: #5c584f;">Milestones</div>
+      <div style="padding: 8px 16px; font-size: 14px; color: #5c584f;">Battles</div>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px;">
+    <div style="background: #ffffff; border-radius: 12px; padding: 18px 20px; box-shadow: 0 1px 2px rgba(28,26,23,.06), 0 4px 16px rgba(28,26,23,.04);">
+      <div style="font-size: 12px; color: #7a766c;">Ships mining</div>
+      <div style="font: 700 38px/1.1 'Source Serif 4', Georgia, serif; margin-top: 6px;">3 <span style="font-size: 16px; color: #7a766c; font-family: 'IBM Plex Sans', sans-serif; font-weight: 400;">of 5</span></div>
+    </div>
+    <div style="background: #ffffff; border-radius: 12px; padding: 18px 20px; box-shadow: 0 1px 2px rgba(28,26,23,.06), 0 4px 16px rgba(28,26,23,.04);">
+      <div style="font-size: 12px; color: #7a766c;">Next cargo full</div>
+      <div style="font: 700 38px/1.1 'Source Serif 4', Georgia, serif; margin-top: 6px;">41 <span style="font-size: 16px; color: #7a766c; font-family: 'IBM Plex Sans', sans-serif; font-weight: 400;">min</span></div>
+    </div>
+    <div style="background: #fff4ea; border-radius: 12px; padding: 18px 20px; box-shadow: 0 1px 2px rgba(28,26,23,.06), 0 4px 16px rgba(28,26,23,.04);">
+      <div style="font-size: 12px; color: #a6561c;">Needs you</div>
+      <div style="font: 700 38px/1.1 'Source Serif 4', Georgia, serif; color: #a6561c; margin-top: 6px;">1 <span style="font-size: 16px; font-family: 'IBM Plex Sans', sans-serif; font-weight: 400;">node empty</span></div>
+    </div>
+    <div style="background: #ffffff; border-radius: 12px; padding: 18px 20px; box-shadow: 0 1px 2px rgba(28,26,23,.06), 0 4px 16px rgba(28,26,23,.04);">
+      <div style="font-size: 12px; color: #7a766c;">Mined today</div>
+      <div style="font: 700 38px/1.1 'Source Serif 4', Georgia, serif; margin-top: 6px;">32.4k</div>
+    </div>
+  </div>
+
+  <div style="background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 2px rgba(28,26,23,.06), 0 4px 16px rgba(28,26,23,.04);">
+    <div style="display: flex; align-items: baseline; gap: 12px; padding: 16px 18px 6px;">
+      <div style="font: 600 20px/1 'Source Serif 4', Georgia, serif;">Mining</div>
+      <div style="font-size: 13px; color: #7a766c;">3 ships in 2 systems</div>
+    </div>
+    <table>
+      <thead><tr><th>Ship</th><th>State</th><th>System</th><th>Resource</th><th style="text-align:right">Rate /h</th><th style="text-align:right">Mined</th><th>Time left</th><th>Cargo</th></tr></thead>
+      <tbody>
+        <tr><td><span class="ship">Horizon</span> <span class="tier">T7</span></td><td><span class="chip" style="background:#e6f4ee;color:#1f7a55">Mining</span></td><td>Lorillia</td><td>Tritanium</td><td class="num">1,240</td><td class="num">18,420</td><td>1h 12m</td><td><div style="display:flex;align-items:center;gap:8px"><div style="width:90px;height:6px;background:#ece9e1;border-radius:3px"><div style="width:62%;height:100%;background:#4c4ddb;border-radius:3px"></div></div><span style="color:#7a766c;font-size:12px">62%</span></div></td></tr>
+        <tr><td><span class="ship">North Star</span> <span class="tier">T6</span></td><td><span class="chip" style="background:#e6f4ee;color:#1f7a55">Mining</span></td><td>Kepler-018</td><td>Dilithium</td><td class="num">312</td><td class="num">4,101</td><td>41m</td><td><div style="display:flex;align-items:center;gap:8px"><div style="width:90px;height:6px;background:#ece9e1;border-radius:3px"><div style="width:88%;height:100%;background:#4c4ddb;border-radius:3px"></div></div><span style="color:#7a766c;font-size:12px">88%</span></div></td></tr>
+        <tr style="background:#fff4ea"><td><span class="ship">Envoy</span> <span class="tier">T5</span></td><td><span class="chip" style="background:#ffe1c9;color:#a6561c">Node empty</span></td><td>Lorillia</td><td>Parsteel</td><td class="num">0</td><td class="num">9,880</td><td style="color:#a6561c;font-weight:600">now</td><td><div style="display:flex;align-items:center;gap:8px"><div style="width:90px;height:6px;background:#ece9e1;border-radius:3px"><div style="width:100%;height:100%;background:#e0782b;border-radius:3px"></div></div><span style="color:#a6561c;font-size:12px">100%</span></div></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div style="background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 2px rgba(28,26,23,.06), 0 4px 16px rgba(28,26,23,.04);">
+    <div style="display: flex; align-items: baseline; gap: 12px; padding: 16px 18px 6px;">
+      <div style="font: 600 20px/1 'Source Serif 4', Georgia, serif;">Other ships</div>
+    </div>
+    <table>
+      <thead><tr><th>Ship</th><th>State</th><th>System</th><th>Shield / Hull</th><th>Officers</th><th>Timer</th></tr></thead>
+      <tbody>
+        <tr><td><span class="ship">Saladin</span> <span class="tier">T8</span></td><td><span class="chip" style="background:#ece9e1;color:#5c584f">Docked</span></td><td>Home</td><td><div style="display:flex;gap:4px"><div style="width:60px;height:6px;background:#ece9e1;border-radius:3px"><div style="width:100%;height:100%;background:#4c8fdb;border-radius:3px"></div></div><div style="width:60px;height:6px;background:#ece9e1;border-radius:3px"><div style="width:100%;height:100%;background:#d94f4f;border-radius:3px"></div></div></div></td><td><div style="display:flex;gap:6px"><span style="padding:2px 10px;border-radius:999px;background:#1c1a17;color:#fff;font-size:12px;font-weight:600">Kirk</span><span style="padding:2px 10px;border-radius:999px;border:1px solid #d9d5ca;color:#5c584f;font-size:12px">Spock</span><span style="padding:2px 10px;border-radius:999px;border:1px solid #d9d5ca;color:#5c584f;font-size:12px">McCoy</span></div></td><td style="color:#7a766c">idle</td></tr>
+        <tr><td><span class="ship">Augur</span> <span class="tier">T6</span></td><td><span class="chip" style="background:#fff1cc;color:#8a6200">Warping</span></td><td>to Rigel</td><td><div style="display:flex;gap:4px"><div style="width:60px;height:6px;background:#ece9e1;border-radius:3px"><div style="width:74%;height:100%;background:#4c8fdb;border-radius:3px"></div></div><div style="width:60px;height:6px;background:#ece9e1;border-radius:3px"><div style="width:91%;height:100%;background:#d94f4f;border-radius:3px"></div></div></div></td><td><div style="display:flex;gap:6px"><span style="padding:2px 10px;border-radius:999px;background:#1c1a17;color:#fff;font-size:12px;font-weight:600">Pike</span><span style="padding:2px 10px;border-radius:999px;border:1px solid #d9d5ca;color:#5c584f;font-size:12px">Moreau</span></div></td><td>6m 20s</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

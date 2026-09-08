@@ -1,0 +1,13 @@
+# separate git clone (netniV/stfc-mod fork, branch yeoman)
+stfc-mod/
+# Il2CppDumper output + binaries (regenerated per game update)
+dump/*
+!dump/MINING_FIELDS.md
+tools/
+# viewer build products and generated data
+viewer/build/
+viewer/dist/
+viewer/data/
+__pycache__/
+# per-machine game path
+viewer/settings.json

@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>About Yeoman</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;700&display=swap">
+<link rel="stylesheet" href="yeoman.css">
+<style>
+  .about { max-width: 52rem; }
+  .about h2 { margin-top: 2rem; }
+  .about h3 { font: 600 1rem var(--font); margin: 1.2rem 0 .3rem; color: var(--text); }
+  .about p, .about li { line-height: 1.5; color: var(--text); }
+  .about p { margin: .3rem 0 .6rem; }
+  .about a { color: var(--accent); }
+  .about code { background: var(--bg3); border: 1px solid var(--line); border-radius: 3px; padding: 0 .3rem; font-size: .9em; }
+  .about .toc { display: flex; gap: .6rem; margin: 0 0 1rem; }
+  .about .toc a { text-decoration: none; }
+  [data-theme="starfleet"] .about .toc a { padding: .3rem .8rem; border-radius: 4px; background: var(--accent3); color: var(--accent-ink); font: 700 .8rem var(--display); letter-spacing: .12em; text-transform: uppercase; }
+</style>
+</head>
+<body>
+<script>document.documentElement.dataset.theme = localStorage.getItem("theme") || "starfleet";</script>
+<header>
+<h1>Yeoman</h1>
+<nav><a href="/" style="text-decoration:none"><button>Back</button></a></nav>
+<div class="ver"><span>about</span></div>
+</header>
+<section class="about">
+<div class="toc"><a href="#faq">FAQ</a><a href="#license">License</a><a href="#thanks">Thanks</a></div>
+
+<h2 id="faq">FAQ</h2>
+
+<h3>What is Yeoman?</h3>
+<p>A companion page for Star Trek Fleet Command on PC. It shows your fleets, mining, loot history, build and research milestones, and battle results in a browser tab, updated while you play. A small mod inside the game writes the numbers to disk. Yeoman reads them and draws the page.</p>
+
+<h3>Does it send anything anywhere?</h3>
+<p>No. The mod writes files into a <code>yeoman</code> folder inside the game folder. The page is served on your own machine only, at <code>localhost:8765</code>. Nothing is uploaded.</p>
+
+<h3>The page is empty or says "waiting for game"</h3>
+<p>The game has to be running with the mod loaded. Start the game, wait for it to reach the galaxy, then press F5. If it stays empty, check that <code>version.dll</code> is in the game folder next to <code>prime.exe</code>. The Settings tab shows the mod status.</p>
+
+<h3>No icons, or names show as numbers</h3>
+<p>Icons and names come from the game's own cache on your PC. They can only be built after the game has run at least once. Run Yeoman again, or use the refresh buttons on the Settings tab. The first icon export takes a few minutes.</p>
+
+<h3>The game updated and nothing works</h3>
+<p>Every game update breaks the mod until it is rebuilt against the new game. Wait for a new Yeoman. Until then the page shows the last data it saw.</p>
+
+<h3>The battles folder is large</h3>
+<p>Each battle is saved as one file. On the Settings tab set "Keep for" to a lower number of days, or turn "Save battle journals" off. Old files are removed when the game next starts.</p>
+
+<h3>The alarm does not sound</h3>
+<p>Turn it on under Settings, then press "test sound". The browser tab must be open. Desktop notifications also need permission the first time; the browser asks for it when you tick the box.</p>
+
+<h3>Can I change the look?</h3>
+<p>Settings, then Theme. Four looks. The choice is saved in the browser.</p>
+
+<h3>Where are the files?</h3>
+<ul>
+<li><code>settings.json</code> next to <code>Yeoman.exe</code>: the game folder.</li>
+<li><code>data\</code> next to <code>Yeoman.exe</code>: names, icon index and icon images.</li>
+<li><code>&lt;game&gt;\yeoman\</code>: everything the mod writes.</li>
+<li><code>&lt;game&gt;\version.dll</code>: the mod. The one that was there before is kept as a <code>.bak</code> file.</li>
+<li><code>&lt;game&gt;\community_patch_settings.toml</code>: the mod's own settings, with a <code>[yeoman]</code> section.</li>
+</ul>
+
+<h3>How do I remove it?</h3>
+<p>Close the game. Delete <code>version.dll</code> from the game folder, or rename the <code>.bak</code> file back. Delete the <code>yeoman</code> folder in the game folder. Delete the Yeoman folder. That is all of it.</p>
+
+<h2 id="license">License</h2>
+<p>Yeoman is free software under the <a href="https://www.gnu.org/licenses/gpl-3.0.html">GNU General Public License, version 3</a>. You may use it, share it and change it under that license. It comes with no warranty.</p>
+<p>The mod is a build of the <a href="https://github.com/netniv/stfc-mod">STFC Community Mod</a> with extra export patches, and is GPL v3 like the original. Source for this build is available on request from the person who gave you Yeoman; a public repository will follow.</p>
+<h3>Built with</h3>
+<ul>
+<li><a href="https://github.com/netniv/stfc-mod">STFC Community Mod</a>, netniV and contributors, GPL v3.</li>
+<li><a href="https://github.com/K0lb3/UnityPy">UnityPy</a>, MIT license. Reads the game's icon bundles.</li>
+<li><a href="https://pyinstaller.org/">PyInstaller</a>, GPL v2 with the bootloader exception, and <a href="https://www.python.org/">Python</a>, PSF license.</li>
+<li>Fonts from Google Fonts under the SIL Open Font License: Rajdhani, IBM Plex Sans, Source Serif 4, Space Grotesk, JetBrains Mono.</li>
+</ul>
+<h3>Trademarks and game content</h3>
+<p>Star Trek Fleet Command is a trademark of Scopely. Star Trek and related marks belong to their owners. Yeoman is a fan project and is not affiliated with, endorsed by or supported by Scopely, Paramount or CBS. Icons and names shown on the page are read from your own installed copy of the game and are never redistributed with Yeoman.</p>
+
+<h2 id="thanks">Thanks</h2>
+<ul>
+<li><b>netniV</b> and everyone on the <a href="https://discord.gg/PrpHgs7Vjs">STFC Community Mod</a> Discord. Yeoman stands on their mod: the hooks, the sync code, the config system and the hard-won fixes after each game update.</li>
+<li><b>K0lb3</b> for UnityPy, which is how the icons get out of the game.</li>
+<li><b>Perfare</b> for Il2CppDumper, used while building the export patches.</li>
+<li>The friends who tried early builds and told me what was confusing.</li>
+</ul>
+</section>
+</body>
+</html>

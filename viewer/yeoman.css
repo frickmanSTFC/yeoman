@@ -1,0 +1,160 @@
+  /* Themes. Pick with the header select; saved in localStorage "theme". Default: starfleet. */
+  :root, [data-theme="starfleet"] {
+    --bg: #050507; --bg2: #100c09; --bg3: #1a1410; --line: #2a1f14; --text: #f4e6d6; --muted: #9a8a7a; --dim: #6e5a4a;
+    --accent: #f5a24a; --accent2: #ffc985; --accent3: #b9a6e6; --accent4: #8fb8e8; --accent-ink: #050507;
+    --warn: #ff6b3d; --alert-bg: #2a1a0c; --gain: #ffc985; --spend: #ff6b3d; --hold: #b9a6e6;
+    --font: 'IBM Plex Sans', 'Segoe UI', sans-serif; --display: 'Rajdhani', 'Arial Narrow', sans-serif;
+    --caps: uppercase; --track: .14em; --radius: 6px; --pill: 999px; --shadow: none; --num: #ffc985; --accent5: #d9906e;
+  }
+  [data-theme="bridge"] {
+    --bg: #0b1220; --bg2: #0f1a2e; --bg3: #142240; --line: #1c2a44; --text: #dbe4f3; --muted: #6f86a8; --dim: #4d5f7d;
+    --accent: #5fe3d0; --accent2: #5fe3d0; --accent3: #5aa9ff; --accent4: #ffb547; --accent-ink: #0b1220;
+    --warn: #ffb547; --alert-bg: #2a1c10; --gain: #5fe3d0; --spend: #ff6b6b; --hold: #5aa9ff;
+    --font: 'IBM Plex Sans', 'Segoe UI', sans-serif; --display: 'Rajdhani', 'Arial Narrow', sans-serif;
+    --caps: uppercase; --track: .12em; --radius: 4px; --pill: 999px; --shadow: none; --num: var(--text);
+  }
+  [data-theme="daylight"] {
+    --bg: #f6f4ee; --bg2: #ffffff; --bg3: #f0ede5; --line: #e3dfd4; --text: #1c1a17; --muted: #7a766c; --dim: #a39e92;
+    --accent: #4c4ddb; --accent2: #1f7a55; --accent3: #4c8fdb; --accent4: #a6561c; --accent-ink: #ffffff;
+    --warn: #a6561c; --alert-bg: #fff4ea; --gain: #1f7a55; --spend: #c43d3d; --hold: #4c4ddb;
+    --font: 'IBM Plex Sans', 'Segoe UI', sans-serif; --display: 'Source Serif 4', Georgia, serif;
+    --caps: none; --track: 0; --radius: 12px; --pill: 999px; --shadow: 0 1px 2px rgba(28,26,23,.06), 0 4px 16px rgba(28,26,23,.04); --num: var(--text);
+  }
+  [data-theme="arcade"] {
+    --bg: #08080a; --bg2: #131317; --bg3: #1c1c22; --line: #2a2a30; --text: #f0f0f2; --muted: #8a8a94; --dim: #5c5c66;
+    --accent: #c8ff2e; --accent2: #c8ff2e; --accent3: #4db8ff; --accent4: #ffd23d; --accent-ink: #08080a;
+    --warn: #ff4d3d; --alert-bg: #2a0f0c; --gain: #c8ff2e; --spend: #ff4d3d; --hold: #4db8ff;
+    --font: 'JetBrains Mono', Consolas, monospace; --display: 'Space Grotesk', 'Segoe UI', sans-serif;
+    --caps: uppercase; --track: .06em; --radius: 0; --pill: 0; --shadow: 6px 6px 0 var(--accent); --num: var(--text);
+  }
+
+  body { font: 14px var(--font); background: var(--bg); color: var(--text); margin: 1.5rem; }
+  header { display: flex; align-items: center; gap: 1.2rem; margin-bottom: 1.2rem; border-bottom: 1px solid var(--line); padding-bottom: .8rem; }
+  h1 { font: 700 1.8rem/1 var(--display); letter-spacing: var(--track); text-transform: var(--caps); color: var(--accent); margin: 0; }
+  h2 { font: 700 1rem/1 var(--display); letter-spacing: var(--track); text-transform: var(--caps); margin: 1.5rem 0 .5rem; color: var(--accent2); }
+  h2 small { font: .8rem var(--font); text-transform: none; letter-spacing: 0; }
+  #status, #lootStatus, #mileStatus, #batStatus { color: var(--muted); margin-bottom: 1rem; }
+  table { border-collapse: collapse; width: 100%; }
+  th, td { padding: .45rem .7rem; text-align: left; border-bottom: 1px solid var(--line); white-space: nowrap; vertical-align: top; }
+  th { font: 700 .75rem var(--display); letter-spacing: var(--track); text-transform: var(--caps); color: var(--accent); border-bottom-width: 2px; }
+  [data-theme="daylight"] th { font: 500 .8rem var(--font); color: var(--muted); border-bottom-width: 1px; }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; color: var(--num); }
+  td.wrap { white-space: normal; }
+  #tab-fleets td.wrap { min-width: 24rem; }
+  section { overflow-x: auto; }
+  .mining { color: var(--accent2); } .battling, .destroyed { color: var(--warn); } .docked { color: var(--muted); }
+  .warping, .impulsing, .warp-charging { color: var(--accent4); } .repairing, .tiering-up { color: var(--accent3); }
+  .bar { display: inline-block; height: 8px; width: 80px; background: var(--line); border-radius: 4px; vertical-align: middle; margin-left: .4rem; overflow: hidden; }
+  .bar > i { display: block; height: 100%; background: var(--accent2); }
+  .bar.hp > i { background: var(--spend); } .bar.sh > i { background: var(--accent3); }
+  tr.alert td { background: var(--alert-bg); }
+  .badge { color: var(--warn); font-weight: 600; margin-left: .4rem; }
+  .dim { color: var(--dim); }
+  .pill { display: inline-block; white-space: nowrap; background: var(--bg3); color: var(--text); border: 1px solid var(--line); border-radius: var(--pill); padding: .05rem .55rem; margin: 0 .3rem .2rem 0; }
+  .pill small { color: var(--muted); }
+  .pill.captain { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 600; }
+  .pill.captain small { color: var(--accent-ink); opacity: .7; }
+  .below { margin-top: .1rem; font-size: .9em; }
+  img.ico { height: 22px; width: 22px; vertical-align: middle; margin-right: .3rem; object-fit: contain; }
+  button.clear { margin-left: .5rem; font-size: .8rem; background: var(--bg3); color: var(--text); border: 1px solid var(--line); border-radius: var(--radius); padding: .1rem .5rem; cursor: pointer; }
+
+  /* tabs */
+  nav { display: flex; gap: .3rem; }
+  nav button { background: none; border: 0; border-bottom: 2px solid transparent; color: var(--muted);
+               font: 600 .95rem var(--display); letter-spacing: var(--track); text-transform: var(--caps); padding: .4rem .9rem; cursor: pointer; }
+  nav button.on { color: var(--text); border-bottom-color: var(--accent); }
+  .ver { margin-left: auto; color: var(--muted); font-size: .85rem; }
+  .grp { background: var(--bg2); border-radius: var(--radius); padding: .2rem 1rem .6rem; margin-bottom: .4rem; }
+  .grp > div { display: flex; align-items: center; gap: 1rem; padding: .6rem 0; border-bottom: 1px solid var(--line); }
+  .grp > div:last-of-type { border-bottom: 0; }
+  .grp > div > span { width: 16rem; color: var(--muted); flex-shrink: 0; }
+  .grp > div > div { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; }
+  .grp p { margin: .4rem 0 0; font-size: .85rem; }
+  .grp select, .grp input:not([type=checkbox]), .grp button { background: var(--bg); color: var(--text); border: 1px solid var(--line); border-radius: var(--radius); font: inherit; padding: .25rem .5rem; }
+  .grp button { cursor: pointer; }
+
+  /* starfleet: tabs live in a left rail of colored blocks */
+  [data-theme="starfleet"] body { padding-left: 170px; }
+  [data-theme="starfleet"] header { position: fixed; left: 1.5rem; top: 1.5rem; bottom: 1.5rem; width: 150px; flex-direction: column; align-items: stretch; gap: 6px; border: 0; padding: 0; margin: 0; }
+  [data-theme="starfleet"] h1 { height: 54px; border-radius: 27px 4px 4px 4px; background: var(--accent); color: var(--accent-ink); font-size: 13px; display: flex; align-items: flex-end; justify-content: flex-end; padding: 0 14px 8px; box-sizing: border-box; }
+  [data-theme="starfleet"] nav { flex-direction: column; gap: 6px; }
+  [data-theme="starfleet"] nav button { height: 48px; border: 0; border-radius: 4px; color: var(--accent-ink); text-align: right; padding: 0 14px; font-size: 15px; opacity: .55; }
+  [data-theme="starfleet"] nav button:nth-child(1) { background: var(--accent2); } [data-theme="starfleet"] nav button:nth-child(2) { background: var(--accent3); }
+  [data-theme="starfleet"] nav button:nth-child(3) { background: var(--accent4); } [data-theme="starfleet"] nav button:nth-child(4) { background: var(--accent5); }
+  [data-theme="starfleet"] nav button:nth-child(5) { background: var(--muted); }
+  [data-theme="starfleet"] nav button.on { opacity: 1; }
+  [data-theme="starfleet"] .ver { margin: auto 0 0; display: flex; flex-direction: column; gap: 6px; }
+  [data-theme="starfleet"] .ver::before { content: ""; display: block; height: 36px; border-radius: 4px; background: var(--line); }
+  [data-theme="starfleet"] .ver span { height: 54px; border-radius: 4px 4px 4px 27px; background: var(--accent); color: var(--accent-ink); font: 700 12px var(--display); letter-spacing: .12em; text-transform: uppercase; display: flex; align-items: flex-start; justify-content: flex-end; padding: 8px 14px 0; box-sizing: border-box; }
+  [data-theme="starfleet"] h2 { padding-left: 34px; position: relative; }
+  [data-theme="starfleet"] h2::before { content: ""; position: absolute; left: 0; top: -2px; width: 26px; height: 18px; border-radius: 9px; background: var(--accent2); }
+
+  /* daylight: pill tab bar */
+  [data-theme="daylight"] nav { background: var(--bg3); padding: 4px; border-radius: 10px; }
+  [data-theme="daylight"] nav button { border: 0; border-radius: 7px; font: 600 .9rem var(--font); }
+  [data-theme="daylight"] nav button.on { background: var(--bg2); box-shadow: 0 1px 2px rgba(28,26,23,.08); }
+  /* arcade: boxed tabs */
+  [data-theme="arcade"] nav { gap: 0; border: 2px solid var(--line); }
+  [data-theme="arcade"] nav button { border: 0; border-left: 2px solid var(--line); padding: .6rem 1.2rem; }
+  [data-theme="arcade"] nav button:first-child { border-left: 0; }
+  [data-theme="arcade"] nav button.on { background: var(--accent); color: var(--accent-ink); }
+  [data-theme="arcade"] th, [data-theme="arcade"] .tile, [data-theme="arcade"] .pill { border-width: 2px; }
+
+  /* loot tab */
+  .controls { display: flex; gap: .6rem; align-items: center; margin-bottom: .9rem; flex-wrap: wrap; }
+  .controls select, .controls input, .controls button {
+    background: var(--bg2); color: var(--text); border: 1px solid var(--line); border-radius: var(--radius); font: inherit; padding: .25rem .5rem; }
+  .controls button { cursor: pointer; }
+  .tiles { display: flex; gap: .8rem; flex-wrap: wrap; margin-bottom: 1rem; }
+  .tile { background: var(--bg2); border: 1px solid var(--line); border-left: 8px solid var(--accent2); border-radius: var(--radius); padding: .7rem 1rem; min-width: 8rem; box-shadow: var(--shadow); }
+  [data-theme="bridge"] .tile { border-left-width: 1px; border-top: 2px solid var(--accent); }
+  [data-theme="daylight"] .tile { border: 0; }
+  [data-theme="arcade"] .tile { border-left-width: 2px; }
+  .tile span { display: block; color: var(--muted); font: 700 .72rem var(--display); text-transform: var(--caps); letter-spacing: var(--track); }
+  [data-theme="daylight"] .tile span { font: .78rem var(--font); }
+  .tile b { font: 700 1.7rem/1.1 var(--display); }
+  .tile em { display: block; color: var(--muted); font-style: normal; font-size: .85rem; }
+  tr[data-id] { cursor: pointer; }
+  tr[data-id]:hover td { background: var(--bg2); }
+  tr.sel td { background: var(--bg3); }
+  td.gain { color: var(--gain); } td.spend { color: var(--spend); }
+  table.loot { table-layout: fixed; min-width: 72rem; }
+  table.loot th, table.loot td { padding: .35rem .55rem; vertical-align: middle;
+                                 overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  table.loot td.wrap { white-space: normal; overflow: visible; }
+  table.loot .pill { white-space: normal; }
+  table.loot td a { color: inherit; text-decoration: none; border-bottom: 1px dotted var(--dim); }
+  table.loot td a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+  .gtot { color: var(--gain); text-transform: none; font-weight: 600; margin-left: .6rem; }
+  tr.grouphead td { background: var(--bg2); color: var(--accent3); font: 700 .78rem var(--display); text-transform: var(--caps);
+                    letter-spacing: var(--track); padding: .3rem .55rem; border-bottom: 1px solid var(--line); }
+  .cond { font-size: .82rem; margin-top: .15rem; }
+  .cond .bar { width: 60px; }
+  table.loot td.res img.ico { height: 20px; width: 20px; }
+  table.loot td.res input.hide { margin: 0 .5rem 0 0; vertical-align: middle; opacity: .35; }
+  table.loot tr:hover td.res input.hide, table.loot td.res input.hide:checked { opacity: 1; }
+  table.loot td.have { color: var(--muted); }
+  svg.chart { width: 100%; height: 260px; display: block; margin-top: .4rem; }
+  svg.chart.mini { height: 170px; }
+  .tag { display: inline-block; background: var(--bg3); border: 1px solid var(--line); border-radius: 3px;
+         padding: 0 .4rem; color: var(--muted); font-size: .8rem; }
+  svg.spark { width: 140px; height: 26px; display: block; }
+  .legend { display: flex; gap: 1rem; align-items: center; color: var(--muted); font-size: .85rem; margin: .2rem 0 .1rem; }
+  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: .35rem; }
+  .tip { position: fixed; z-index: 9; pointer-events: none; background: var(--bg2); color: var(--text); border: 1px solid var(--line);
+         border-radius: 4px; padding: .35rem .55rem; font-size: .8rem; line-height: 1.35; white-space: nowrap; }
+
+  /* result chips (battles) */
+  .chip { display: inline-block; padding: .05rem .6rem; border-radius: var(--pill); font: 700 .72rem var(--display); letter-spacing: var(--track); text-transform: var(--caps); color: var(--accent-ink); }
+  .chip.kill { background: var(--gain); } .chip.loss { background: var(--spend); } .chip.nokill { background: var(--accent4); }
+  [data-theme="daylight"] .chip { color: #fff; }
+
+  /* starfleet: tiles cycle the rail colors, controls read as one strip */
+  [data-theme="starfleet"] .tile:nth-child(4n+1) { border-left-color: var(--accent2); }
+  [data-theme="starfleet"] .tile:nth-child(4n+2) { border-left-color: var(--accent3); }
+  [data-theme="starfleet"] .tile:nth-child(4n+3) { border-left-color: var(--accent4); }
+  [data-theme="starfleet"] .tile:nth-child(4n+4) { border-left-color: var(--accent5); }
+  [data-theme="starfleet"] .controls { background: var(--bg2); border-radius: 18px 6px 6px 18px; padding: .5rem .8rem .5rem 1.2rem; border-left: 10px solid var(--accent3); color: var(--muted); }
+  [data-theme="starfleet"] .controls select, [data-theme="starfleet"] .controls button, [data-theme="starfleet"] .grp button { background: var(--accent); color: var(--accent-ink); border: 0; font: 700 .78rem var(--display); letter-spacing: .1em; text-transform: uppercase; }
+  [data-theme="starfleet"] .controls input { background: var(--bg); border-color: var(--line); }
+  [data-theme="starfleet"] #lootDetail, [data-theme="starfleet"] #mileChart { background: var(--bg2); border-radius: 6px; padding: .6rem .8rem; }

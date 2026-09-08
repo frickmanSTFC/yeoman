@@ -1,0 +1,101 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+  <style>
+    body { margin: 0; background: #050507; }
+    a { color: #f5a24a; } a:hover { color: #ffc985; }
+    table { border-collapse: collapse; width: 100%; }
+    th { text-align: left; font: 700 12px/1.2 'Rajdhani', 'Arial Narrow', sans-serif; letter-spacing: .14em; text-transform: uppercase; color: #f5a24a; padding: 8px 12px; border-bottom: 2px solid #2a1f14; }
+    td { font: 500 14px/1.3 'IBM Plex Sans', 'Segoe UI', sans-serif; color: #f4e6d6; padding: 9px 12px; border-bottom: 1px solid #16120e; white-space: nowrap; }
+    td.num { text-align: right; font-variant-numeric: tabular-nums; color: #ffc985; }
+    .chip { display: inline-block; padding: 2px 12px; border-radius: 999px; font: 700 11px/1.5 'Rajdhani', sans-serif; letter-spacing: .12em; text-transform: uppercase; color: #050507; }
+    .ship { color: #ffffff; font-weight: 600; }
+    .tier { color: #9a8a7a; font-weight: 400; }
+    .seg { font: 700 15px/1 'Rajdhani', sans-serif; letter-spacing: .12em; text-transform: uppercase; color: #050507; padding: 0 14px; display: flex; align-items: center; justify-content: flex-end; border-radius: 4px; }
+    .lbl { font: 700 11px/1 'Rajdhani', sans-serif; letter-spacing: .16em; text-transform: uppercase; color: #9a8a7a; }
+    .big { font: 700 40px/1 'Rajdhani', sans-serif; color: #ffffff; margin-top: 8px; }
+  </style>
+</helmet>
+<div style="width: 1280px; height: 760px; box-sizing: border-box; background: #050507; color: #f4e6d6; font-family: 'IBM Plex Sans', 'Segoe UI', sans-serif; display: flex; gap: 18px; padding: 22px 26px;">
+
+  <div style="width: 150px; display: flex; flex-direction: column; gap: 6px; flex-shrink: 0;">
+    <div style="height: 54px; border-radius: 27px 4px 4px 4px; background: #f5a24a; display: flex; align-items: flex-end; justify-content: flex-end; padding: 0 14px 8px; font: 700 13px/1 'Rajdhani', sans-serif; letter-spacing: .12em; color: #050507;">STFC</div>
+    <div class="seg" style="height: 48px; background: #ffc985;">Fleets</div>
+    <div class="seg" style="height: 48px; background: #b9a6e6;">Loot</div>
+    <div class="seg" style="height: 48px; background: #8fb8e8;">Milestones</div>
+    <div class="seg" style="height: 48px; background: #d9906e;">Battles</div>
+    <div style="flex: 1 1 auto; border-radius: 4px; background: #2a1f14;"></div>
+    <div class="seg" style="height: 36px; background: #6e5a4a; font-size: 12px;">Alarm on</div>
+    <div style="height: 54px; border-radius: 4px 4px 4px 27px; background: #f5a24a; display: flex; align-items: flex-start; justify-content: flex-end; padding: 8px 14px 0; font: 700 12px/1 'Rajdhani', sans-serif; letter-spacing: .12em; color: #050507;">LIVE 3S</div>
+  </div>
+
+  <div style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 16px; min-width: 0;">
+
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <div style="font: 700 30px/1 'Rajdhani', sans-serif; letter-spacing: .1em; text-transform: uppercase; color: #f5a24a; white-space: nowrap;">Fleet console</div>
+      <div style="flex: 1 1 auto; height: 14px; border-radius: 7px; background: #ffc985;"></div>
+      <div style="width: 90px; height: 14px; border-radius: 7px; background: #b9a6e6;"></div>
+      <div style="width: 40px; height: 14px; border-radius: 7px; background: #8fb8e8;"></div>
+      <div style="font: 700 13px/1 'Rajdhani', sans-serif; letter-spacing: .14em; color: #9a8a7a; white-space: nowrap;">STARDATE 2026.250</div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px;">
+      <div style="background: #100c09; border-left: 10px solid #ffc985; border-radius: 6px; padding: 14px 16px;">
+        <div class="lbl">Ships mining</div>
+        <div class="big">3 <span style="font-size: 16px; color: #9a8a7a;">of 5</span></div>
+      </div>
+      <div style="background: #100c09; border-left: 10px solid #b9a6e6; border-radius: 6px; padding: 14px 16px;">
+        <div class="lbl">Next cargo full</div>
+        <div class="big">41<span style="font-size: 16px; color: #9a8a7a;"> min</span></div>
+      </div>
+      <div style="background: #2a1a0c; border-left: 10px solid #ff6b3d; border-radius: 6px; padding: 14px 16px;">
+        <div class="lbl" style="color: #ff6b3d;">Alert</div>
+        <div class="big" style="color: #ff9d7a;">1 <span style="font-size: 16px;">node empty</span></div>
+      </div>
+      <div style="background: #100c09; border-left: 10px solid #8fb8e8; border-radius: 6px; padding: 14px 16px;">
+        <div class="lbl">Mined today</div>
+        <div class="big">32.4<span style="font-size: 16px; color: #9a8a7a;">k</span></div>
+      </div>
+    </div>
+
+    <div style="background: #0b0907; border-radius: 6px; overflow: hidden;">
+      <div style="display: flex; align-items: center; gap: 10px; padding: 8px 12px; background: #100c09;">
+        <div style="width: 26px; height: 18px; border-radius: 9px; background: #ffc985;"></div>
+        <div style="font: 700 16px/1 'Rajdhani', sans-serif; letter-spacing: .16em; text-transform: uppercase; color: #ffc985;">Mining</div>
+        <div style="font-size: 12px; color: #9a8a7a;">3 ships · 2 systems</div>
+      </div>
+      <table>
+        <thead><tr><th>Ship</th><th>State</th><th>System</th><th>Resource</th><th style="text-align:right">Rate /h</th><th style="text-align:right">Mined</th><th>Time left</th><th>Cargo</th></tr></thead>
+        <tbody>
+          <tr><td><span class="ship">Horizon</span> <span class="tier">T7</span></td><td><span class="chip" style="background:#ffc985">Mining</span></td><td>Lorillia</td><td>Tritanium</td><td class="num">1,240</td><td class="num">18,420</td><td>1h 12m</td><td><div style="display:flex;align-items:center;gap:8px"><div style="width:90px;height:8px;background:#2a1f14;border-radius:4px"><div style="width:62%;height:100%;background:#ffc985;border-radius:4px"></div></div><span style="color:#9a8a7a;font-size:12px">62%</span></div></td></tr>
+          <tr><td><span class="ship">North Star</span> <span class="tier">T6</span></td><td><span class="chip" style="background:#ffc985">Mining</span></td><td>Kepler-018</td><td>Dilithium</td><td class="num">312</td><td class="num">4,101</td><td>41m</td><td><div style="display:flex;align-items:center;gap:8px"><div style="width:90px;height:8px;background:#2a1f14;border-radius:4px"><div style="width:88%;height:100%;background:#ffc985;border-radius:4px"></div></div><span style="color:#9a8a7a;font-size:12px">88%</span></div></td></tr>
+          <tr style="background:#2a1a0c"><td><span class="ship">Envoy</span> <span class="tier">T5</span></td><td><span class="chip" style="background:#ff6b3d">Node empty</span></td><td>Lorillia</td><td>Parsteel</td><td class="num">0</td><td class="num">9,880</td><td style="color:#ff9d7a;font-weight:600">0m</td><td><div style="display:flex;align-items:center;gap:8px"><div style="width:90px;height:8px;background:#2a1f14;border-radius:4px"><div style="width:100%;height:100%;background:#ff6b3d;border-radius:4px"></div></div><span style="color:#ff9d7a;font-size:12px">100%</span></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="background: #0b0907; border-radius: 6px; overflow: hidden;">
+      <div style="display: flex; align-items: center; gap: 10px; padding: 8px 12px; background: #100c09;">
+        <div style="width: 26px; height: 18px; border-radius: 9px; background: #b9a6e6;"></div>
+        <div style="font: 700 16px/1 'Rajdhani', sans-serif; letter-spacing: .16em; text-transform: uppercase; color: #b9a6e6;">Other ships</div>
+      </div>
+      <table>
+        <thead><tr><th>Ship</th><th>State</th><th>System</th><th>Shield / Hull</th><th>Officers</th><th>Timer</th></tr></thead>
+        <tbody>
+          <tr><td><span class="ship">Saladin</span> <span class="tier">T8</span></td><td><span class="chip" style="background:#6e5a4a;color:#f4e6d6">Docked</span></td><td>Home</td><td><div style="display:flex;gap:4px"><div style="width:60px;height:8px;background:#2a1f14;border-radius:4px"><div style="width:100%;height:100%;background:#8fb8e8;border-radius:4px"></div></div><div style="width:60px;height:8px;background:#2a1f14;border-radius:4px"><div style="width:100%;height:100%;background:#d9906e;border-radius:4px"></div></div></div></td><td><div style="display:flex;gap:6px"><span style="padding:2px 10px;border-radius:999px;background:#f5a24a;color:#050507;font-size:12px;font-weight:600">Kirk</span><span style="padding:2px 10px;border-radius:999px;border:1px solid #6e5a4a;color:#d9c7b3;font-size:12px">Spock</span><span style="padding:2px 10px;border-radius:999px;border:1px solid #6e5a4a;color:#d9c7b3;font-size:12px">McCoy</span></div></td><td style="color:#9a8a7a">idle</td></tr>
+          <tr><td><span class="ship">Augur</span> <span class="tier">T6</span></td><td><span class="chip" style="background:#8fb8e8">Warping</span></td><td>to Rigel</td><td><div style="display:flex;gap:4px"><div style="width:60px;height:8px;background:#2a1f14;border-radius:4px"><div style="width:74%;height:100%;background:#8fb8e8;border-radius:4px"></div></div><div style="width:60px;height:8px;background:#2a1f14;border-radius:4px"><div style="width:91%;height:100%;background:#d9906e;border-radius:4px"></div></div></div></td><td><div style="display:flex;gap:6px"><span style="padding:2px 10px;border-radius:999px;background:#f5a24a;color:#050507;font-size:12px;font-weight:600">Pike</span><span style="padding:2px 10px;border-radius:999px;border:1px solid #6e5a4a;color:#d9c7b3;font-size:12px">Moreau</span></div></td><td>6m 20s</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

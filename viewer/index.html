@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Yeoman</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;700&display=swap">
+<link rel="stylesheet" href="yeoman.css">
+</head>
+<body>
+<script>document.documentElement.dataset.theme = localStorage.getItem("theme") || "starfleet";</script>
+<header>
+<h1>Yeoman</h1>
+<nav>
+  <button id="navFleets" class="on">Fleets</button>
+  <button id="navLoot">Loot</button>
+  <button id="navMile">Milestones</button>
+  <button id="navBat">Battles</button>
+  <button id="navSet">Settings</button>
+</nav>
+<div class="ver"><span id="ver"></span></div>
+</header>
+
+<section id="tab-fleets">
+<div id="status">waiting for game…</div>
+
+<h2>Mining</h2>
+<table>
+  <thead><tr>
+    <th>#</th><th>Ship</th><th>Tier</th><th>State</th><th>System</th>
+    <th>Resource</th><th class="num">Rate /h</th><th class="num">Mined</th><th class="num">Left</th><th>Time left</th>
+    <th class="num">Cargo</th><th class="num">Protected</th>
+  </tr></thead>
+  <tbody id="mining"></tbody>
+</table>
+
+<h2>Other ships</h2>
+<table>
+  <thead><tr>
+    <th>#</th><th>Ship</th><th>Tier</th><th>Lvl</th><th>State</th><th>System</th>
+    <th>Shield / Hull</th><th class="num">Strength</th><th>Officers</th><th>Cargo</th><th>Timer</th>
+  </tr></thead>
+  <tbody id="other"></tbody>
+</table>
+</section>
+
+<section id="tab-loot" hidden>
+<div id="lootStatus">reading log…</div>
+<div class="controls">
+  <label>range
+    <select id="lootRange">
+      <option value="7">7 days</option>
+      <option value="14" selected>14 days</option>
+      <option value="30">30 days</option>
+      <option value="all">all</option>
+    </select>
+  </label>
+  <input id="lootFilter" placeholder="filter resource…" size="18">
+  <label><input type="checkbox" id="lootToday"> gathered today only</label>
+  <label><input type="checkbox" id="lootGroup"> group by type</label>
+  <label title="flagged rows are hidden unless this is on"><input type="checkbox" id="lootShowHidden"> show hidden<span id="lootShowHiddenN"></span></label>
+  <button id="lootReload">refresh</button>
+  <button id="lootScan" title="ask the game to name any icons it has learned since last time">update icons</button>
+  <span id="lootScanMsg" class="dim"></span>
+</div>
+<div class="tiles" id="lootStats"></div>
+<div id="lootDetail"></div>
+
+<h2>Per resource</h2>
+<table class="loot">
+  <colgroup>
+    <col style="width:auto"><col style="width:8.5rem"><col style="width:6.5rem"><col style="width:7rem">
+    <col style="width:7rem"><col style="width:7rem"><col style="width:7rem"><col style="width:7rem">
+    <col style="width:10rem">
+  </colgroup>
+  <thead><tr>
+    <th>Resource</th><th class="num">Have now</th><th class="num">Today</th><th class="num">Yesterday</th>
+    <th class="num">Avg / day</th><th class="num">Gained</th><th class="num">Spent</th><th class="num">Net</th>
+    <th>Last 14 days</th>
+  </tr></thead>
+  <tbody id="lootBody"></tbody>
+</table>
+</section>
+
+<section id="tab-mile" hidden>
+<div id="mileStatus">reading log…</div>
+<div class="controls">
+  <label>show
+    <select id="mileKind">
+      <option value="all">everything</option>
+      <option value="building">buildings</option>
+      <option value="research">research</option>
+      <option value="ship">ships</option>
+    </select>
+  </label>
+  <label>range
+    <select id="mileRange">
+      <option value="7">7 days</option>
+      <option value="30" selected>30 days</option>
+      <option value="90">90 days</option>
+      <option value="3650">all</option>
+    </select>
+  </label>
+  <button id="mileReload">refresh</button>
+</div>
+<div class="tiles" id="mileStats"></div>
+<div id="mileChart"></div>
+
+<h2>Timeline</h2>
+<table class="loot">
+  <colgroup><col style="width:11rem"><col style="width:7rem"><col style="width:auto"><col style="width:12rem"></colgroup>
+  <thead><tr><th>When</th><th>Type</th><th>What</th><th class="num">Change</th></tr></thead>
+  <tbody id="mileBody"></tbody>
+</table>
+
+<h2>Ship module upgrades <small class="dim">cost measured from what left your account within 15s</small></h2>
+<table class="loot">
+  <colgroup><col style="width:11rem"><col style="width:14rem"><col style="width:16rem"><col style="width:auto"></colgroup>
+  <thead><tr><th>When</th><th>Ship</th><th>Module</th><th>Paid</th></tr></thead>
+  <tbody id="modBody"></tbody>
+</table>
+</section>
+
+<section id="tab-bat" hidden>
+<div id="batStatus">reading battle journals…</div>
+<div class="controls">
+  <label>show
+    <select id="batSide">
+      <option value="all">everything</option>
+      <option value="hostiles">hostiles only</option>
+      <option value="players">players only</option>
+    </select>
+  </label>
+  <label>range
+    <select id="batRange">
+      <option value="7">7 days</option>
+      <option value="30" selected>30 days</option>
+      <option value="3650">all</option>
+    </select>
+  </label>
+  <button id="batReload">refresh</button>
+</div>
+<div class="tiles" id="batStats"></div>
+
+<h2>Battles</h2>
+<table class="loot">
+  <colgroup><col style="width:11rem"><col style="width:10rem"><col style="width:14rem"><col style="width:auto">
+    <col style="width:18rem"><col style="width:5rem"><col style="width:6rem"></colgroup>
+  <thead><tr><th>When</th><th>System</th><th>My ship</th><th>Crew</th><th>Against</th>
+    <th>Result</th><th class="num">Hull damage</th></tr></thead>
+  <tbody id="batBody"></tbody>
+</table>
+</section>
+
+<section id="tab-set" hidden>
+<div id="setStatus">reading settings…</div>
+<div class="controls">
+  <button id="setSave">save</button>
+  <button id="setReload">reload</button>
+  <span class="dim">battle journal changes apply on the next game start</span>
+</div>
+
+<h2>Look</h2>
+<div class="grp">
+  <div><span>Theme</span><div>
+    <select id="theme">
+      <option value="starfleet">Starfleet</option>
+      <option value="bridge">Bridge</option>
+      <option value="daylight">Daylight</option>
+      <option value="arcade">Arcade</option>
+    </select></div></div>
+  <div><span>Alarm</span><div><label><input type="checkbox" id="alarm"> beep when protected cargo is full or the node is empty</label><button id="test">test sound</button></div></div>
+</div>
+
+<h2>Game</h2>
+<div class="grp">
+  <div><span>Game folder</span><div><input id="setGame" size="44"></div></div>
+  <div><span>Mod</span><div><span class="tag" id="setMod"></span><span class="dim">version.dll · the old one is kept as .bak</span></div></div>
+  <p class="dim">Nothing leaves this PC. The page is only reachable from this machine.</p>
+</div>
+
+<h2>Battle journals</h2>
+<div class="grp">
+  <div><span>Save battle journals</span><div><label><input type="checkbox" id="setBJ"> one file per battle, feeds the Battles tab</label></div></div>
+  <div><span>Keep for</span><div><input id="setDays" size="4"> days <span class="dim">0 keeps everything · older files are removed at game start</span></div></div>
+  <div><span>On disk now</span><div><b id="setBatSize"></b><span class="dim" id="setBatFiles"></span></div></div>
+</div>
+
+<h2>Data</h2>
+<div class="grp">
+  <div><span>Names</span><div><span class="dim" id="setNames"></span><button data-refresh="names">refresh</button></div></div>
+  <div><span>Icons</span><div><span class="dim" id="setIcons"></span><button data-refresh="icons">refresh</button><span class="dim">first export takes a few minutes</span></div></div>
+</div>
+
+<h2>About</h2>
+<div class="grp">
+  <div><span>Help</span><div><a href="about.html#faq"><button>FAQ</button></a><a href="about.html#license"><button>License</button></a><a href="about.html#thanks"><button>Thanks</button></a></div></div>
+  <p class="dim">Yeoman is free software under the GPL v3, built on the STFC Community Mod. Not affiliated with Scopely.</p>
+</div>
+</section>
+
+<script src="loot.js"></script>
+<script src="milestones.js"></script>
+<script src="battles.js"></script>
+<script>
+const n = v => v == null ? "" : Math.round(v).toLocaleString();
+const hms = s => { if (s == null || !(s > 0)) return ""; s = Math.round(s);
+  const h = Math.floor(s/3600), m = Math.floor(s%3600/60); return `${h}h ${String(m).padStart(2,"0")}m`; };
+const pct = (a,b) => b ? Math.min(100, 100*a/b) : 0;
+const bar = (a, b, cls) => `<span class="bar ${cls||""}"><i style="width:${pct(a,b)}%"></i></span>`;
+const HULL = {0: "Destroyer", 1: "Survey", 2: "Explorer", 3: "Battleship", 4: "Defense", 5: "Armada"};
+
+// --- alarm -------------------------------------------------------------
+const alarmBox = document.getElementById("alarm");
+alarmBox.checked = localStorage.getItem("alarm") === "1";
+alarmBox.onchange = () => { localStorage.setItem("alarm", alarmBox.checked ? "1" : "0");
+  if (alarmBox.checked && "Notification" in window) Notification.requestPermission(); };
+let audio;
+function beep() {
+  // annoying on purpose: 8 alternating tones over ~3s, loud
+  audio ??= new AudioContext();
+  for (let i = 0; i < 8; i++) {
+    const t = i * .4, o = audio.createOscillator(), g = audio.createGain();
+    o.type = "square"; o.frequency.value = i % 2 ? 1320 : 880; o.connect(g); g.connect(audio.destination);
+    g.gain.setValueAtTime(.5, audio.currentTime + t); g.gain.exponentialRampToValueAtTime(.001, audio.currentTime + t + .35);
+    o.start(audio.currentTime + t); o.stop(audio.currentTime + t + .35);
+  }
+}
+document.getElementById("test").onclick = beep;
+
+const REPEAT_MS = 5 * 60 * 1000;
+const muted = new Set(JSON.parse(localStorage.getItem("muted") || "[]"));   // fleet ids cleared by you
+const lastAlarm = {};                                                       // fleet id -> last beep time
+const saveMuted = () => localStorage.setItem("muted", JSON.stringify([...muted]));
+function alertsFor(f) {
+  const m = f.mining, c = f.cargo || {}, out = [];
+  if (f.state !== "mining" || !m) return out;
+  if (c.protected_max && c.current >= c.protected_max) out.push("protected full");
+  if (m.left <= 0 || m.remaining_s <= 0) out.push("node empty");
+  return out;
+}
+function raise(f, reasons) {
+  const c = f.cargo || {};
+  if (!(c.current > 0)) {              // cargo back to zero: this ship's clear resets
+    if (muted.delete(f.id)) saveMuted();
+    delete lastAlarm[f.id];
+  }
+  if (!reasons.length) { delete lastAlarm[f.id]; return; }
+  if (!alarmBox.checked || muted.has(f.id)) return;
+  const now = Date.now();
+  if (lastAlarm[f.id] && now - lastAlarm[f.id] < REPEAT_MS) return;
+  lastAlarm[f.id] = now;
+  beep();
+  if ("Notification" in window && Notification.permission === "granted")
+    new Notification(`${f.ship}: ${reasons.join(", ")}`);
+}
+document.body.onclick = e => {
+  const b = e.target.closest("button[data-clear]"); if (!b) return;
+  const id = Number(b.dataset.clear);
+  muted.has(id) ? muted.delete(id) : muted.add(id); saveMuted(); tick();
+};
+
+// --- names ---------------------------------------------------------------
+let icons = {by_name: {}, by_id: {}}, iconNorm = {}, iconMap = {};
+// art id -> sprite name, answered by the game itself (see write_icon_map in the mod).
+// Tabs await iconsReady before rendering, otherwise a fast render beats the fetch and drops icons.
+const iconMapReady = fetch("/iconmap.json").then(r => r.ok ? r.json() : {})
+  .then(m => { iconMap = m; globalThis.iconMap = m; }).catch(() => {});
+// Same name with the punctuation and case rubbed off, so "Swarm Advanced Biotics" finds
+// "Swarm_Advanced_Biotics_Small". Exact after normalising only — no fuzzy guessing, because a
+// wrong icon is worse than none.
+const normKey = s => (s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+const iconsFileReady = fetch("/icons.json").then(r => r.ok ? r.json() : icons).then(i => {
+  icons = i;
+  for (const [k, v] of Object.entries(i.by_name || {})) {
+    const n = normKey(k);
+    if (!(n in iconNorm)) iconNorm[n] = v;
+  }
+}).catch(() => {});
+const iconFor = x => {
+  const internal = x.resource || x.name || "";
+  const bare = internal.replace(/^Resource_/, "");         // core currencies ship as plain "Parsteel", "ShipXP"
+  // No art-id lookup. The digits in a sprite filename (Token_9709_..., FtechToken_0051_...) are that
+  // bundle's own sequence number, not the game's art id; they agree often enough to look right and
+  // often enough to be wrong — Officer XP came out as a Borg Alcove. Name matching only.
+  // The game's own answer. Its key is the whole identifier, "resource/icon_<artId>" — an art id is
+  // only unique inside its kind, so buff/icon_51 and resource/icon_51 are different pictures.
+  const told = iconMap["resource/icon_" + (x.art_id ?? "")];
+  const f = (told && (icons.by_name[told] || icons.by_name[told + "_Small"]))
+    || (x.art_ref && (icons.by_name[x.art_ref] || icons.by_name[x.art_ref + "_Small"]))
+    || icons.by_name[internal]
+    || icons.by_name[bare] || icons.by_name[bare + "_Small"]
+    || icons.by_name[internal.replace(/_G\d_/, "_G2_")]    // raw crystal/gas/ore: only the G2 icon ships, reuse it
+    || [internal, bare, x.pretty].map(normKey).filter(Boolean)
+         .map(n => iconNorm[n] || iconNorm[n + "small"] || iconNorm[n + "large"]).find(Boolean);
+  return f ? `<img src="${f}" class="ico" alt="">` : "";
+};
+let names = {entity: {}, loca: {}};
+fetch("/names.json").then(r => r.ok ? r.json() : names).then(n => { names = n; }).catch(() => {});
+const iconsReady = Promise.all([iconMapReady, iconsFileReady]);
+globalThis.iconsReady = iconsReady;
+globalThis.iconMap = iconMap;
+globalThis.setIconMap = m => { iconMap = m; globalThis.iconMap = m; };   // used by the "update icons" button
+const nameOf = (id, fallback) => names.entity[String(id)] || fallback || id || "";
+const cleanInternal = s => (s || "").replace(/^Resource_/, "").replace(/_/g, " ");
+const resourceName = m => m.resource_pretty || names.loca[String(m.resource_loca)] || names.entity[String(m.resource_id)]
+  || cleanInternal(m.resource) || m.resource_id;
+
+// --- rows ----------------------------------------------------------------
+function stateCell(f, reasons) {
+  const isMuted = muted.has(f.id);
+  const clearBtn = reasons.length
+    ? `<button data-clear="${f.id}" class="clear">${isMuted ? "cleared · re-arm" : "clear alarm"}</button>` : "";
+  return `<td class="${f.state}">${f.state}${reasons.map(r => `<span class="badge">${r}</span>`).join("")}${clearBtn}</td>`;
+}
+function miningRow(f, reasons) {
+  const m = f.mining || {}, c = f.cargo || {};
+  const rate = m.remaining_s > 0 ? m.left / m.remaining_s * 3600 : null;   // game's PerHourRate isn't per hour
+  const prot = Math.min(c.current ?? 0, c.protected_max ?? 0);
+  return `<tr class="${reasons.length && !muted.has(f.id) ? "alert" : ""}">
+    <td>${f.index+1}</td><td>${f.ship}</td><td>${f.tier ?? ""}</td>${stateCell(f, reasons)}<td>${nameOf(f.system)}</td>
+    <td>${iconFor(m)}${resourceName(m)}</td><td class="num">${n(rate)}</td><td class="num">${n(m.mined)}</td>
+    <td class="num">${n(m.left)}</td><td>${hms(m.remaining_s)}</td>
+    <td class="num">${n(c.current)} / ${n(c.max)}${bar(c.current, c.max)}</td>
+    <td class="num">${n(prot)} / ${n(c.protected_max)}</td></tr>`;
+}
+function otherRow(f) {
+  const s = f.stats || {}, c = f.cargo || {};
+  const hullNow = s.hull_hp_now || (s.hull_hp ? s.hull_hp * (1 - (f.hull_damage || 0)) : 0);
+  const shNow   = s.shield_hp_now || (s.shield_hp ? s.shield_hp * (1 - (f.shield_damage || 0)) : 0);
+  // FleetOfficers order: [0]=captain, [1..2]=bridge, [3..]=below deck (FleetPlayerData index constants)
+  const crew = f.officers || [];
+  // The game counts officer rank from zero here; the battle journals and the game's own UI count
+  // from one. Shift it so both tabs agree with what you see in game.
+  const oname = o => `${o.name || nameOf(o.spec_id, nameOf(o.id))} <small>${o.level}/${(o.rank ?? 0) + 1}</small>`;
+  const pill = (o, cls) => `<span class="pill ${cls}">${oname(o)}</span>`;
+  const officers = crew.length ? `<div>${crew.slice(0, 3).map((o, i) => pill(o, i === 0 ? "captain" : "")).join("")}</div>`
+    + (crew.length > 3 ? `<div class="below">${crew.slice(3).map(o => pill(o, "")).join("")}</div>` : "") : "";
+  const items = (f.cargo_items || []).map(it => `${iconFor(it)}${n(it.amount)} ${it.pretty || nameOf(it.id, cleanInternal(it.name))}`).join(", ");
+  const timer = hms(f.timer_s) || hms(f.course_s);
+  return `<tr>
+    <td>${f.index+1}</td><td>${f.ship} <small class="dim">${HULL[f.hull_type] ?? ""}</small></td><td>${f.tier ?? ""}</td><td>${f.level ?? ""}</td>
+    ${stateCell(f, [])}<td>${nameOf(f.system)}</td>
+    <td><div>${n(shNow)} / ${n(s.shield_hp)}${bar(shNow, s.shield_hp, "sh")}</div>
+        <div>${n(hullNow)} / ${n(s.hull_hp)}${bar(hullNow, s.hull_hp, "hp")}</div></td>
+    <td class="num">${n(s.strength)}</td>
+    <td class="wrap">${officers}</td>
+    <td class="wrap">${items || (c.current > 0 ? n(c.current) : "")}</td>
+    <td>${timer}</td></tr>`;
+}
+
+async function tick() {
+  try {
+    const r = await fetch("/fleets.json", {cache: "no-store"});
+    if (!r.ok) throw new Error(r.status);
+    const d = await r.json();
+    const age = Math.round(Date.now()/1000 - d.updated);
+    document.getElementById("status").textContent =
+      `${d.fleets.length} ships · updated ${age}s ago` + (age > 15 ? " · game not running?" : "");
+    const mining = [], other = [];
+    for (const f of d.fleets) {
+      const reasons = alertsFor(f); raise(f, reasons);
+      (f.state === "mining" ? mining : other).push(f.state === "mining" ? miningRow(f, reasons) : otherRow(f));
+    }
+    document.getElementById("mining").innerHTML = mining.join("") || `<tr><td colspan="12" class="dim">no ships mining</td></tr>`;
+    document.getElementById("other").innerHTML = other.join("") || `<tr><td colspan="11" class="dim">none</td></tr>`;
+  } catch (e) {
+    document.getElementById("status").textContent = "no data yet — start the game (" + e.message + ")";
+  }
+}
+tick(); setInterval(tick, 3000);
+
+// --- theme ---------------------------------------------------------------
+const themeSel = document.getElementById("theme");
+themeSel.value = document.documentElement.dataset.theme;
+themeSel.onchange = () => { localStorage.setItem("theme", themeSel.value); document.documentElement.dataset.theme = themeSel.value; };
+
+// --- tabs ----------------------------------------------------------------
+// ponytail: two sections and a hidden attribute. A router would be more code than the page.
+const tabs = {navFleets: "tab-fleets", navLoot: "tab-loot", navMile: "tab-mile", navBat: "tab-bat", navSet: "tab-set"};
+const loaded = {};
+for (const [btn, sec] of Object.entries(tabs)) {
+  document.getElementById(btn).onclick = () => {
+    for (const [b, s] of Object.entries(tabs)) {
+      document.getElementById(b).classList.toggle("on", b === btn);
+      document.getElementById(s).hidden = s !== sec;
+    }
+    if (loaded[sec]) return;
+    loaded[sec] = true;
+    if (sec === "tab-loot") LOOT.load();
+    if (sec === "tab-mile") MILE.load();
+    if (sec === "tab-bat") BATTLE.load();
+    if (sec === "tab-set") SET.load();
+  };
+}
+
+// --- settings tab ------------------------------------------------------
+const SET = {
+  s: null,
+  fmtBytes: b => b > 1e9 ? (b / 1e9).toFixed(1) + " GB" : b > 1e6 ? Math.round(b / 1e6) + " MB" : Math.round(b / 1e3) + " KB",
+  when: t => t ? new Date(t * 1000).toLocaleString([], {dateStyle: "medium", timeStyle: "short"}) : "not built yet",
+  show(s) {
+    this.s = s;
+    document.getElementById("ver").textContent = "v" + s.version;
+    const m = s.mod, modTxt = !m.installed ? "not installed" : m.up_to_date ? "up to date" : m.bundled ? "update waiting (close the game, run Yeoman)" : "installed";
+    document.getElementById("setStatus").textContent = `Yeoman v${s.version} · mod ${modTxt} · game ${m.game_running ? "running" : "closed"}`;
+    document.getElementById("setGame").value = s.game || "";
+    document.getElementById("setMod").textContent = modTxt;
+    document.getElementById("setBJ").checked = !!s.toml.battlejournals;
+    document.getElementById("setDays").value = s.toml.battlejournal_days;
+    document.getElementById("setBatSize").textContent = this.fmtBytes(s.battles.bytes);
+    document.getElementById("setBatFiles").textContent = `${s.battles.files.toLocaleString()} files in yeoman\\battles`;
+    document.getElementById("setNames").textContent = s.busy.names || (s.names ? `refreshed ${this.when(s.names.mtime)}` : "not built yet");
+    document.getElementById("setIcons").textContent = s.busy.icons || (s.icons.mtime ? `${s.icons.count.toLocaleString()} icons · refreshed ${this.when(s.icons.mtime)}` : "not built yet");
+    if (Object.keys(s.busy).length) setTimeout(() => SET.load(), 3000);
+  },
+  async load() { this.show(await fetch("/settings.json", {cache: "no-store"}).then(r => r.json())); },
+  async post(url, body) {
+    return fetch(url, {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(body)}).then(r => r.json());
+  },
+};
+document.getElementById("setReload").onclick = () => SET.load();
+document.getElementById("setSave").onclick = async () => {
+  const body = {game: document.getElementById("setGame").value.trim(),
+                battlejournals: document.getElementById("setBJ").checked,
+                battlejournal_days: Number(document.getElementById("setDays").value) || 0};
+  SET.show(await SET.post("/settings", body));
+  document.getElementById("setStatus").textContent += " · saved";
+};
+for (const b of document.querySelectorAll("button[data-refresh]"))
+  b.onclick = async () => { await SET.post("/refresh", {what: b.dataset.refresh}); SET.load(); };
+fetch("/settings.json").then(r => r.json()).then(s => { document.getElementById("ver").textContent = "v" + s.version; }).catch(() => {});
+LOOT.setIconFn(iconFor);
+LOOT.init();
+MILE.init();
+BATTLE.init();
+</script>
+</body>
+</html>

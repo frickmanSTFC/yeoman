@@ -1,0 +1,127 @@
+{
+  "pages": [
+    {
+      "id": "page-1",
+      "name": "Starfleet (built)"
+    },
+    {
+      "id": "page-2",
+      "name": "Other looks"
+    }
+  ],
+  "artboards": [
+    {
+      "file": "Main.dc.html",
+      "title": "Fleets",
+      "x": 0,
+      "y": 0,
+      "w": 1500,
+      "h": 720,
+      "page": "page-1"
+    },
+    {
+      "file": "Loot.dc.html",
+      "title": "Loot",
+      "x": 1600,
+      "y": 0,
+      "w": 1280,
+      "h": 900,
+      "page": "page-1"
+    },
+    {
+      "file": "Milestones.dc.html",
+      "title": "Milestones",
+      "x": 0,
+      "y": 1040,
+      "w": 1280,
+      "h": 820,
+      "page": "page-1"
+    },
+    {
+      "file": "Battles.dc.html",
+      "title": "Battles",
+      "x": 1600,
+      "y": 1040,
+      "w": 1280,
+      "h": 720,
+      "page": "page-1"
+    },
+    {
+      "file": "Settings.dc.html",
+      "title": "Settings",
+      "x": 0,
+      "y": 2000,
+      "w": 1280,
+      "h": 960,
+      "page": "page-1"
+    },
+    {
+      "file": "About.dc.html",
+      "title": "About (FAQ, License, Thanks)",
+      "x": 1600,
+      "y": 2000,
+      "w": 1280,
+      "h": 1700,
+      "page": "page-1",
+      "print": "flow"
+    },
+    {
+      "file": "DirectionA.dc.html",
+      "title": "A · Bridge console",
+      "x": 0,
+      "y": 0,
+      "w": 1280,
+      "h": 760,
+      "page": "page-2"
+    },
+    {
+      "file": "DirectionB.dc.html",
+      "title": "B · Daylight",
+      "x": 1380,
+      "y": 0,
+      "w": 1280,
+      "h": 760,
+      "page": "page-2"
+    },
+    {
+      "file": "DirectionC.dc.html",
+      "title": "C · Arcade",
+      "x": 0,
+      "y": 900,
+      "w": 1280,
+      "h": 760,
+      "page": "page-2"
+    },
+    {
+      "file": "DirectionD.dc.html",
+      "title": "D · Starfleet (sketch)",
+      "x": 1380,
+      "y": 900,
+      "w": 1280,
+      "h": 760,
+      "page": "page-2"
+    }
+  ],
+  "annotations": [
+    {
+      "id": "built-note",
+      "x": 0,
+      "y": -260,
+      "w": 520,
+      "page": "page-1",
+      "text": "Yeoman v0.5 beta, Starfleet theme. Built from the page's own stylesheet, so colors, fonts and spacing are the real ones. Rows are sample data.\n\nThe rail says Yeoman with the version at the bottom. The fifth tab, Settings, gathers theme, alarm, game folder, battle journal on/off and retention, and the data refresh buttons. All of it is built and live in the page.\n\nOther looks: see the second page."
+    },
+    {
+      "id": "pick-one",
+      "x": 0,
+      "y": 1800,
+      "w": 420,
+      "page": "page-2",
+      "text": "The four looks drafted before the build. D was picked and built; the other three live on in the page as switchable themes."
+    }
+  ],
+  "launch": {
+    "view": "canvas",
+    "page": "page-1"
+  }
+}
