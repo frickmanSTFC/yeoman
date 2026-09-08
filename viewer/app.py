@@ -100,7 +100,7 @@ def refresh_icons():
     if bundle and newer(bundle, icons.INDEX):
         say("icons: exporting from the game's cache, first time takes a few minutes…")
         n = icons.export()
-        say(f"icons: {n} exported")
+        say(f"icons: {n} exported" if n else "icons: none exported, see the skip lines above; the page shows no pictures")
     elif os.path.isfile(icons.INDEX):
         say("icons are current")
     else:
