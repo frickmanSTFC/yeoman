@@ -61,6 +61,8 @@ Community Mod) and thanks. Same page from source: `about.html`.
 
 ## Running from source
 
+Source: [Yeoman](https://github.com/frickmanSTFC/yeoman) and the [mod fork](https://github.com/frickmanSTFC/stfc-mod/tree/yeoman) (branch `yeoman`).
+
 ```
 pip install UnityPy
 python app.py
