@@ -37,19 +37,28 @@ def read_toml():
     return out
 
 
+def _toml(v):
+    """bool -> true/false, int -> int, str -> single-quoted literal (no backslash escaping needed)."""
+    if isinstance(v, bool):
+        return str(v).lower()
+    if isinstance(v, int):
+        return str(v)
+    return "'" + str(v).replace("'", "") + "'"
+
+
 def write_toml(values):
     # ponytail: regex edit of two lines; the mod rewrites the file with its own layout anyway
     p = toml_path()
     text = open(p, encoding="utf-8").read() if os.path.isfile(p) else ""
-    lines = "".join(f"{k} = {str(v).lower() if isinstance(v, bool) else int(v)}\n" for k, v in values.items())
+    lines = "".join(f"{k} = {_toml(v)}\n" for k, v in values.items())
     sec = _section(text)
     if not sec:
         text = text.rstrip("\n") + "\n\n[yeoman]\n" + lines
     else:
         body = text[sec[0]:sec[1]]
         for k, v in values.items():
-            val = str(v).lower() if isinstance(v, bool) else int(v)
-            body, n = re.subn(rf"^(\s*{k}\s*=\s*)[^\n#]*", rf"\g<1>{val}", body, count=1, flags=re.M)
+            val = _toml(v)
+            body, n = re.subn(rf"^(\s*{k}\s*=\s*)[^\n#]*", lambda m: m.group(1) + val, body, count=1, flags=re.M)
             if not n:
                 body += f"{k} = {val}\n"
         text = text[:sec[0]] + body + text[sec[1]:]

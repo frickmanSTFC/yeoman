@@ -21,7 +21,10 @@ It has two parts:
 5. Run `Yeoman.exe` again. It exports icons from the game's own cache (a few minutes, once),
    builds the name table, and opens the page.
 
-From then on: start the game, run `Yeoman.exe`. Close the Yeoman window to stop the page.
+From then on the game starts Yeoman by itself: the mod remembers where `Yeoman.exe` is and
+launches it at game start. Running `Yeoman.exe` yourself still works and just opens the page.
+Close the Yeoman window to stop the page. To stop the auto-start, blank the `exe` line under
+`[yeoman]` in `<game>\community_patch_settings.toml`.
 
 ## Updates
 

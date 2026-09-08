@@ -107,11 +107,31 @@ def refresh_icons():
         say("icons: game cache not found yet; run Yeoman again after the game has started once")
 
 
+def already_running():
+    import socket, serve
+    with socket.socket() as s:
+        return s.connect_ex(("127.0.0.1", serve.PORT)) == 0
+
+
+def register_autostart():
+    """Tell the mod where this exe is so the game starts Yeoman itself. Only for the built exe."""
+    if not paths.FROZEN:
+        return
+    import settings_api
+    settings_api.write_toml({"exe": sys.executable})
+
+
 def main():
     print("Yeoman")
+    if already_running():
+        say("Yeoman is already running; opening the page")
+        import webbrowser, serve
+        webbrowser.open(f"http://localhost:{serve.PORT}/")
+        return
     game = find_game()
     say(f"game: {game}")
     install_mod(game)
+    register_autostart()
     move_old_exports(game)
     refresh_names()
     refresh_icons()
