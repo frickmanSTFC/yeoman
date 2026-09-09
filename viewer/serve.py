@@ -109,6 +109,8 @@ class H(http.server.SimpleHTTPRequestHandler):
             return os.path.join(GAME, "community_patch_specs.json")
         if path.startswith("/resources.json"):
             return os.path.join(GAME, "community_patch_resources.json")
+        if path.startswith("/events.json"):
+            return os.path.join(GAME, "community_patch_events.json")
         if path.startswith("/research.json"):
             return os.path.join(GAME, "community_patch_research.json")
         if path.startswith("/milestones.jsonl"):

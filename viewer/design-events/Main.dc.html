@@ -1,3 +1,14 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;700&display=swap">
+  <style>
   /* Themes. Pick with the header select; saved in localStorage "theme". Default: starfleet. */
   :root, [data-theme="starfleet"] {
     --bg: #050507; --bg2: #100c09; --bg3: #1a1410; --line: #2a1f14; --text: #f4e6d6; --muted: #9a8a7a; --dim: #6e5a4a;
@@ -28,14 +39,6 @@
     --caps: uppercase; --track: .06em; --radius: 0; --pill: 0; --shadow: 6px 6px 0 var(--accent); --num: var(--text);
   }
 
-  [data-theme="klingon"] {
-    --bg: #120806; --bg2: #050303; --bg3: #1a0a07; --line: #5a1a10; --text: #e2a58f; --muted: #a8402c; --dim: #6d2a1e;
-    --accent: #d8351f; --accent2: #e8c94a; --accent3: #ff6a3a; --accent4: #c98a7a; --accent-ink: #0a0403;
-    --warn: #e8c94a; --alert-bg: #2a0a06; --gain: #e8c94a; --spend: #ff6a3a; --hold: #c98a7a; --accent5: #7a1d12;
-    --font: 'IBM Plex Sans', 'Segoe UI', sans-serif; --display: 'Teko', 'Arial Narrow', sans-serif;
-    --caps: uppercase; --track: .1em; --radius: 0; --pill: 0; --shadow: none; --num: #e8c94a;
-  }
-
   body { font: 14px var(--font); background: var(--bg); color: var(--text); margin: 1.5rem; }
   header { display: flex; align-items: center; gap: 1.2rem; margin-bottom: 1.2rem; border-bottom: 1px solid var(--line); padding-bottom: .8rem; }
   h1 { font: 700 1.8rem/1 var(--display); letter-spacing: var(--track); text-transform: var(--caps); color: var(--accent); margin: 0; }
@@ -46,8 +49,7 @@
   th, td { padding: .45rem .7rem; text-align: left; border-bottom: 1px solid var(--line); white-space: nowrap; vertical-align: top; }
   th { font: 700 .75rem var(--display); letter-spacing: var(--track); text-transform: var(--caps); color: var(--accent); border-bottom-width: 2px; }
   [data-theme="daylight"] th { font: 500 .8rem var(--font); color: var(--muted); border-bottom-width: 1px; }
-  th.num, td.num { text-align: right; }
-  td.num { font-variant-numeric: tabular-nums; color: var(--num); }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; color: var(--num); }
   td.wrap { white-space: normal; }
   #tab-fleets td.wrap { min-width: 24rem; }
   section { overflow-x: auto; }
@@ -89,10 +91,8 @@
   [data-theme="starfleet"] nav { flex-direction: column; gap: 6px; }
   [data-theme="starfleet"] nav button { height: 48px; border: 0; border-radius: 4px; color: var(--accent-ink); text-align: right; padding: 0 14px; font-size: 15px; opacity: .55; }
   [data-theme="starfleet"] nav button:nth-child(1) { background: var(--accent2); } [data-theme="starfleet"] nav button:nth-child(2) { background: var(--accent3); }
-  [data-theme="starfleet"] nav button:nth-child(3) { background: var(--accent); } [data-theme="starfleet"] nav button:nth-child(4) { background: var(--accent4); }
-  [data-theme="starfleet"] nav button:nth-child(5) { background: var(--accent3); } [data-theme="starfleet"] nav button:nth-child(6) { background: var(--accent2); }
-  [data-theme="starfleet"] nav button:nth-child(7) { background: var(--accent5); }
-  [data-theme="starfleet"] nav button:last-child { background: var(--muted); }
+  [data-theme="starfleet"] nav button:nth-child(3) { background: var(--accent4); } [data-theme="starfleet"] nav button:nth-child(4) { background: var(--accent5); }
+  [data-theme="starfleet"] nav button:nth-child(5) { background: var(--muted); }
   [data-theme="starfleet"] nav button.on { opacity: 1; }
   [data-theme="starfleet"] .ver { margin: auto 0 0; display: flex; flex-direction: column; gap: 6px; }
   [data-theme="starfleet"] .ver::before { content: ""; display: block; height: 36px; border-radius: 4px; background: var(--line); }
@@ -129,10 +129,6 @@
   tr[data-id]:hover td { background: var(--bg2); }
   tr.sel td { background: var(--bg3); }
   td.gain { color: var(--gain); } td.spend { color: var(--spend); }
-  .chip.claim { background: var(--gain); color: var(--accent-ink); } .chip.running { background: var(--accent4); color: var(--accent-ink); }
-  .chip.ended { background: var(--bg3); color: var(--muted); } .chip.todo { background: var(--bg3); color: var(--muted); border: 1px solid var(--line); }
-  .ok { color: var(--gain); } .no { color: var(--dim); } .bar.wide { width: 140px; }
-  .chip.available { background: var(--gain); color: var(--accent-ink); } .chip.locked { background: var(--bg3); color: var(--muted); } .chip.done { background: var(--accent3); color: var(--accent-ink); }
   table.loot { table-layout: fixed; min-width: 72rem; }
   table.loot th, table.loot td { padding: .35rem .55rem; vertical-align: middle;
                                  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -174,62 +170,90 @@
   [data-theme="starfleet"] .controls input { background: var(--bg); border-color: var(--line); }
   [data-theme="starfleet"] #lootDetail, [data-theme="starfleet"] #mileChart { background: var(--bg2); border-radius: 6px; padding: .6rem .8rem; }
 
-  /* klingon: black screens in red frames on riveted iron; red is the ink, yellow marks what is live */
-  [data-theme="klingon"] body { padding-left: 190px; background:
-      radial-gradient(ellipse at 30% 0%, rgba(120,30,15,.35), transparent 55%),
-      radial-gradient(ellipse at 90% 100%, rgba(120,30,15,.3), transparent 50%),
-      repeating-linear-gradient(135deg, rgba(255,255,255,.015) 0 2px, transparent 2px 9px), var(--bg); background-attachment: fixed; }
-  [data-theme="klingon"] header { position: fixed; left: 1.5rem; top: 1.5rem; bottom: 1.5rem; width: 160px; flex-direction: column; align-items: stretch; gap: 6px;
-      border: 1px solid #3a1c14; padding: 12px 10px; margin: 0; box-sizing: border-box;
-      background: linear-gradient(180deg, #2a1410, #1a0c08 40%, #22100b); box-shadow: inset 0 0 0 1px #4a2418, inset 0 0 30px rgba(0,0,0,.6); }
-  [data-theme="klingon"] header::before, [data-theme="klingon"] header::after { content: ""; position: absolute; left: 6px; right: 6px; height: 4px;
-      background: radial-gradient(circle, #6a3a2a 0 1.5px, transparent 2px) 0 0/12px 4px; }
-  [data-theme="klingon"] header::before { top: 4px; } [data-theme="klingon"] header::after { bottom: 4px; }
-  [data-theme="klingon"] h1 { height: 46px; background: #050303; border: 1px solid var(--accent); color: var(--accent); font: 700 24px/1 var(--display); letter-spacing: .18em;
-      display: flex; align-items: center; justify-content: center; padding: 4px 0 0; margin-bottom: 6px; text-shadow: 0 0 10px rgba(216,53,31,.7);
-      clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px)); }
-  [data-theme="klingon"] nav { flex-direction: column; gap: 6px; }
-  [data-theme="klingon"] nav button { height: 34px; border: 0; background: linear-gradient(180deg, #e04a2e, #a8261a); color: var(--accent-ink);
-      text-align: center; padding: 3px 0 0; font: 700 18px/1 var(--display); letter-spacing: .12em;
-      clip-path: polygon(6px 0, calc(100% - 6px) 0, 100% 50%, calc(100% - 6px) 100%, 6px 100%, 0 50%); }
-  [data-theme="klingon"] nav button.on { background: linear-gradient(180deg, #f2d75e, #cfa92a); color: #1a0c08; }
-  [data-theme="klingon"] .ver { margin: auto 0 0; display: flex; flex-direction: column; gap: 6px; }
-  [data-theme="klingon"] .ver::before { content: ""; display: block; height: 2px; background: var(--accent5); }
-  [data-theme="klingon"] .ver span { height: 40px; background: #050303; border: 1px solid var(--accent5); color: var(--accent); font: 700 14px var(--display); letter-spacing: .14em; text-transform: uppercase;
-      display: flex; align-items: center; justify-content: center; }
-  /* screens: every table, tile, control bar, chart block and settings group is a recessed black panel with a red frame */
-  [data-theme="klingon"] table, [data-theme="klingon"] .tile, [data-theme="klingon"] .controls, [data-theme="klingon"] .grp, [data-theme="klingon"] #lootDetail, [data-theme="klingon"] #repDetail, [data-theme="klingon"] #mileChart {
-      background: #050303; border: 2px solid var(--accent); box-shadow: inset 0 0 40px rgba(216,53,31,.12);
-      clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px)); }
-  [data-theme="klingon"] table { border-collapse: separate; border-spacing: 0; padding: .4rem .6rem .8rem; box-sizing: border-box; }
-  [data-theme="klingon"] .controls { padding: .6rem .9rem; }
-  [data-theme="klingon"] #lootDetail, [data-theme="klingon"] #repDetail, [data-theme="klingon"] #mileChart { padding: .2rem 1rem .8rem; }
-  [data-theme="klingon"] #lootDetail:empty, [data-theme="klingon"] #repDetail:empty, [data-theme="klingon"] #mileChart:empty { display: none; }
-  [data-theme="klingon"] h2 { margin: 1.6rem 0 .5rem; font: 700 1.5rem/1 var(--display); letter-spacing: .14em; color: var(--accent); text-shadow: 0 0 12px rgba(216,53,31,.6); }
-  [data-theme="klingon"] #lootDetail h2, [data-theme="klingon"] #repDetail h2 { margin-top: .8rem; }
-  [data-theme="klingon"] th { font-size: 1.05rem; letter-spacing: .1em; color: var(--accent); border-bottom: 1px solid var(--accent); }
-  [data-theme="klingon"] td { border-bottom: 1px solid #2a0d09; }
-  [data-theme="klingon"] tr.sel td { background: #1a0a07; }
-  [data-theme="klingon"] tr.alert td { background: var(--alert-bg); color: var(--accent2); }
-  [data-theme="klingon"] tr.grouphead td { background: #140806; color: var(--accent2); font-size: 1rem; }
-  [data-theme="klingon"] .tile { border-width: 2px; border-left-width: 2px; padding: .7rem 1.1rem; }
-  [data-theme="klingon"] .tile span { color: var(--accent); } [data-theme="klingon"] .tile b { color: var(--accent2); }
-  [data-theme="klingon"] .bar { height: 10px; width: 84px; border-radius: 0; background: #0a0403; border: 1px solid var(--accent5); }
-  [data-theme="klingon"] .bar > i { background: repeating-linear-gradient(-60deg, var(--accent) 0 4px, #4a1008 4px 6px); }
-  [data-theme="klingon"] .bar.hp > i { background: repeating-linear-gradient(-60deg, var(--accent3) 0 4px, #4a1008 4px 6px); }
-  [data-theme="klingon"] .bar.sh > i { background: repeating-linear-gradient(-60deg, var(--accent4) 0 4px, #3a1a12 4px 6px); }
-  [data-theme="klingon"] .pill { border: 1px solid var(--accent5); background: #0a0403; }
-  [data-theme="klingon"] .pill.captain { background: var(--accent2); border-color: var(--accent2); color: var(--accent-ink); }
-  [data-theme="klingon"] .chip { color: var(--accent-ink); }
-  [data-theme="klingon"] .chip.kill, [data-theme="klingon"] .chip.available { background: var(--accent2); }
-  [data-theme="klingon"] .chip.loss { background: var(--accent3); }
-  [data-theme="klingon"] .chip.nokill, [data-theme="klingon"] .chip.locked { background: var(--accent5); color: var(--text); }
-  [data-theme="klingon"] .chip.done { background: var(--accent); }
-  [data-theme="klingon"] .controls select, [data-theme="klingon"] .controls input, [data-theme="klingon"] .grp select, [data-theme="klingon"] .grp input:not([type=checkbox]), [data-theme="klingon"] button.clear {
-      border: 1px solid var(--accent); background: #0a0403; color: var(--accent2); border-radius: 0; }
-  [data-theme="klingon"] .controls button, [data-theme="klingon"] .grp button { background: linear-gradient(180deg, #e04a2e, #a8261a); color: var(--accent-ink); border: 0; border-radius: 0;
-      font: 700 .95rem var(--display); letter-spacing: .1em; text-transform: uppercase; padding: .2rem .9rem;
-      clip-path: polygon(5px 0, calc(100% - 5px) 0, 100% 50%, calc(100% - 5px) 100%, 5px 100%, 0 50%); }
-  [data-theme="klingon"] .grp { padding: .4rem 1.2rem .8rem; }
-  [data-theme="klingon"] .grp > div { border-bottom-color: #2a0d09; }
-  [data-theme="klingon"] .mining { color: var(--accent2); } [data-theme="klingon"] .docked { color: var(--dim); }
+
+  .about { max-width: 52rem; }
+  .about h2 { margin-top: 2rem; }
+  .about h3 { font: 600 1rem var(--font); margin: 1.2rem 0 .3rem; color: var(--text); }
+  .about p, .about li { line-height: 1.5; color: var(--text); }
+  .about p { margin: .3rem 0 .6rem; }
+  .about a { color: var(--accent); }
+  .about code { background: var(--bg3); border: 1px solid var(--line); border-radius: 3px; padding: 0 .3rem; font-size: .9em; }
+  .about .toc { display: flex; gap: .6rem; margin: 0 0 1rem; }
+  .about .toc a { text-decoration: none; }
+  [data-theme="starfleet"] .about .toc a { padding: .3rem .8rem; border-radius: 4px; background: var(--accent3); color: var(--accent-ink); font: 700 .8rem var(--display); letter-spacing: .12em; text-transform: uppercase; }
+
+  body { margin: 0; }
+  .page { position: relative; width: 100%; box-sizing: border-box; padding: 1.5rem 1.5rem 1.5rem 194px; min-height: 100%; font: 14px var(--font); background: var(--bg); color: var(--text); }
+  .page header { position: absolute; }
+  .page section { overflow: visible; }
+  a { color: var(--accent); } a:hover { color: var(--accent2); }
+  .chip { display: inline-block; padding: .05rem .6rem; border-radius: var(--pill); font: 700 .72rem var(--display); letter-spacing: var(--track); text-transform: var(--caps); color: var(--accent-ink); }
+  .chip.done { background: var(--accent3); } .chip.claim { background: var(--gain); } .chip.running { background: var(--accent4); } .chip.ended { background: var(--bg3); color: var(--muted); }
+  .chip.todo { background: var(--bg3); color: var(--muted); border: 1px solid var(--line); }
+  .ok { color: var(--gain); } .no { color: var(--dim); }
+  .bar.wide { width: 140px; }
+  th.num, td.num { text-align: right; }
+</style>
+</helmet>
+<div class="page" data-theme="starfleet">
+<header>
+<h1>Yeoman</h1>
+<nav><button class="">Fleets</button><button class="">Loot</button><button class="">Reputation</button><button class="">Milestones</button><button class="">Research</button><button class="on">Events</button><button class="">Battles</button><button class="">Settings</button></nav>
+<div class="settings" style="margin: auto 0 0; display: flex; flex-direction: column; gap: 6px;">
+  <div style="height: 36px; border-radius: 4px; background: var(--line);"></div>
+  <div style="height: 54px; border-radius: 4px 4px 4px 27px; background: var(--accent); color: var(--accent-ink); font: 700 12px var(--display); letter-spacing: .12em; text-transform: uppercase; display: flex; align-items: flex-start; justify-content: flex-end; padding: 8px 14px 0; box-sizing: border-box;">v0.8 beta</div>
+</div>
+</header>
+<section>
+<div id="lootStatus">9 events &middot; 3 running &middot; 1 claim waiting &middot; dailies reset in 6h 12m</div>
+<div class="controls"><label>show <select><option>running</option><option>all</option><option>ended</option></select></label><label><input type="checkbox" checked> alarm when a claim is waiting</label><button>refresh</button></div>
+<div class="tiles">
+  <div class="tile"><span>dailies</span><b>7 / 10</b><em>3 left, 6h 12m</em></div>
+  <div class="tile"><span>running</span><b>3</b><em>next ends in 5h 40m</em></div>
+  <div class="tile"><span>claim waiting</span><b>1</b><em>Fortune Favours the Bold</em></div>
+  <div class="tile"><span>daily chest</span><b>150</b><em>next at 160 points</em></div>
+</div>
+
+<h2>Dailies <small class="dim">reset in 6h 12m</small></h2>
+<table class="loot" style="min-width:0">
+<colgroup><col style="width:2rem"><col style="width:auto"><col style="width:14rem"><col style="width:10rem"><col style="width:8rem"></colgroup>
+<thead><tr><th></th><th>Goal</th><th>Progress</th><th>Reward</th><th>State</th></tr></thead>
+<tbody>
+<tr><td class="ok">&#10003;</td><td>Complete 3 missions</td><td>3 / 3 <span class="bar"><i style="width:100%"></i></span></td><td>Daily points 20</td><td><span class="chip done">done</span></td></tr>
+<tr><td class="ok">&#10003;</td><td>Defeat 10 hostiles</td><td>10 / 10 <span class="bar"><i style="width:100%"></i></span></td><td>Daily points 20</td><td><span class="chip done">done</span></td></tr>
+<tr><td class="ok">&#10003;</td><td>Mine 500,000 resources</td><td>500,000 / 500,000 <span class="bar"><i style="width:100%"></i></span></td><td>Daily points 20</td><td><span class="chip done">done</span></td></tr>
+<tr><td class="ok">&#10003;</td><td>Upgrade a building</td><td>1 / 1 <span class="bar"><i style="width:100%"></i></span></td><td>Daily points 10</td><td><span class="chip done">done</span></td></tr>
+<tr><td class="ok">&#10003;</td><td>Research once</td><td>1 / 1 <span class="bar"><i style="width:100%"></i></span></td><td>Daily points 10</td><td><span class="chip done">done</span></td></tr>
+<tr><td class="ok">&#10003;</td><td>Send 5 gifts</td><td>5 / 5 <span class="bar"><i style="width:100%"></i></span></td><td>Daily points 10</td><td><span class="chip done">done</span></td></tr>
+<tr><td class="ok">&#10003;</td><td>Help alliance 5 times</td><td>5 / 5 <span class="bar"><i style="width:100%"></i></span></td><td>Daily points 10</td><td><span class="chip done">done</span></td></tr>
+<tr><td class="no">&middot;</td><td>Defeat 3 player ships</td><td>1 / 3 <span class="bar"><i style="width:33%"></i></span></td><td>Daily points 20</td><td><span class="chip todo">to do</span></td></tr>
+<tr><td class="no">&middot;</td><td>Complete an armada</td><td>0 / 1 <span class="bar"><i style="width:0%"></i></span></td><td>Daily points 20</td><td><span class="chip todo">to do</span></td></tr>
+<tr><td class="no">&middot;</td><td>Use 3 speed ups</td><td>2 / 3 <span class="bar"><i style="width:66%"></i></span></td><td>Daily points 10</td><td><span class="chip todo">to do</span></td></tr>
+</tbody></table>
+
+<h2>Solo milestone events <small class="dim">your points against each milestone</small></h2>
+<table class="loot" style="min-width:0">
+<colgroup><col style="width:auto"><col style="width:7rem"><col style="width:9rem"><col style="width:14rem"><col style="width:12rem"><col style="width:9rem"></colgroup>
+<thead><tr><th>Event</th><th>State</th><th>Ends in</th><th>Milestones</th><th class="num">Points</th><th class="num">To next</th></tr></thead>
+<tbody>
+<tr class="sel"><td>Fortune Favours the Bold</td><td><span class="chip claim">claim</span></td><td>1d 4h</td><td>6 / 10 <span class="bar wide"><i style="width:60%"></i></span></td><td class="num">184,200</td><td class="num">15,800</td></tr>
+<tr class=""><td>Prime Directive: Mining</td><td><span class="chip running">running</span></td><td>2d 9h</td><td>3 / 8 <span class="bar wide"><i style="width:37%"></i></span></td><td class="num">1.2M</td><td class="num">800k</td></tr>
+<tr class=""><td>Hostile Hunt</td><td><span class="chip running">running</span></td><td>5h 40m</td><td>9 / 9 <span class="bar wide"><i style="width:100%"></i></span></td><td class="num">312,000</td><td class="num"></td></tr>
+<tr class=""><td>Battle Pass · week 3</td><td><span class="chip running">running</span></td><td>4d 1h</td><td>14 / 30 <span class="bar wide"><i style="width:47%"></i></span></td><td class="num">2,850</td><td class="num">150</td></tr>
+<tr class=""><td>Armada Assault</td><td><span class="chip ended">ended</span></td><td>&mdash;</td><td>7 / 10 <span class="bar wide"><i style="width:70%"></i></span></td><td class="num">96,500</td><td class="num"></td></tr>
+</tbody></table>
+
+<h2>Fortune Favours the Bold <small class="dim">objectives &middot; 1d 4h left</small></h2>
+<table class="loot" style="min-width:0">
+<colgroup><col style="width:auto"><col style="width:16rem"><col style="width:9rem"><col style="width:9rem"></colgroup>
+<thead><tr><th>Objective</th><th>Progress</th><th class="num">Points each</th><th>State</th></tr></thead>
+<tbody>
+<tr><td>Defeat hostiles level 40+</td><td>120 / 120 <span class="bar"><i style="width:100%"></i></span></td><td class="num">600</td><td><span class="chip done">done</span></td></tr>
+<tr><td>Kill an armada</td><td>4 / 10 <span class="bar"><i style="width:40%"></i></span></td><td class="num">4,000</td><td><span class="chip running">running</span></td></tr>
+<tr><td>Destroy player ships</td><td>2 / 25 <span class="bar"><i style="width:8%"></i></span></td><td class="num">2,500</td><td><span class="chip running">running</span></td></tr>
+</tbody></table>
+</section>
+</div>
+</x-dc>
+</body>
+</html>

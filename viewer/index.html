@@ -16,6 +16,7 @@
   <button id="navRep">Reputation</button>
   <button id="navMile">Milestones</button>
   <button id="navRes">Research</button>
+  <button id="navEv">Events</button>
   <button id="navBat">Battles</button>
   <button id="navSet">Settings</button>
 </nav>
@@ -188,6 +189,42 @@
 </table>
 </section>
 
+<section id="tab-ev" hidden>
+<div id="evStatus">reading events…</div>
+<div class="controls">
+  <label>show
+    <select id="evView">
+      <option value="running" selected>running</option>
+      <option value="all">all</option>
+      <option value="ended">ended</option>
+    </select>
+  </label>
+  <button id="evReload">refresh</button>
+</div>
+<div class="tiles" id="evStats"></div>
+
+<h2>Dailies <small class="dim" id="evDailyHead"></small></h2>
+<table class="loot" style="min-width:0">
+  <colgroup><col style="width:2rem"><col style="width:auto"><col style="width:16rem"><col style="width:8rem"></colgroup>
+  <thead><tr><th></th><th>Goal</th><th>Progress</th><th>State</th></tr></thead>
+  <tbody id="evDailies"></tbody>
+</table>
+
+<h2>Events <small class="dim">your points against each milestone</small></h2>
+<table class="loot" style="min-width:0">
+  <colgroup><col style="width:auto"><col style="width:7rem"><col style="width:8rem"><col style="width:16rem"><col style="width:9rem"><col style="width:9rem"></colgroup>
+  <thead><tr><th>Event</th><th>State</th><th>Ends in</th><th>Milestones</th><th class="num">Points</th><th class="num">To next</th></tr></thead>
+  <tbody id="evBody"></tbody>
+</table>
+
+<h2 id="evDetailHead"></h2>
+<table class="loot" style="min-width:0">
+  <colgroup><col style="width:auto"><col style="width:16rem"><col style="width:8rem"></colgroup>
+  <thead><tr><th>Objective</th><th>Progress</th><th>State</th></tr></thead>
+  <tbody id="evDetail"></tbody>
+</table>
+</section>
+
 <section id="tab-bat" hidden>
 <div id="batStatus">reading battle journals…</div>
 <div class="controls">
@@ -270,6 +307,7 @@
 <script src="loot.js"></script>
 <script src="milestones.js"></script>
 <script src="research.js"></script>
+<script src="events.js"></script>
 <script src="battles.js"></script>
 <script>
 const n = v => v == null ? "" : Math.round(v).toLocaleString();
@@ -446,7 +484,7 @@ themeSel.onchange = () => { localStorage.setItem("theme", themeSel.value); docum
 
 // --- tabs ----------------------------------------------------------------
 // ponytail: two sections and a hidden attribute. A router would be more code than the page.
-const tabs = {navFleets: "tab-fleets", navLoot: "tab-loot", navRep: "tab-rep", navMile: "tab-mile", navRes: "tab-res", navBat: "tab-bat", navSet: "tab-set"};
+const tabs = {navFleets: "tab-fleets", navLoot: "tab-loot", navRep: "tab-rep", navMile: "tab-mile", navRes: "tab-res", navEv: "tab-ev", navBat: "tab-bat", navSet: "tab-set"};
 const loaded = {};
 for (const [btn, sec] of Object.entries(tabs)) {
   document.getElementById(btn).onclick = () => {
@@ -460,11 +498,12 @@ for (const [btn, sec] of Object.entries(tabs)) {
     if (sec === "tab-rep") LOOT.showRep();
     if (sec === "tab-mile") MILE.load();
     if (sec === "tab-res") RESEARCH.load();
+    if (sec === "tab-ev") EVENTS.load();
     if (sec === "tab-bat") BATTLE.load();
     if (sec === "tab-set") SET.load();
   };
 }
-// #loot, #rep, #mile, #res, #bat, #set open that tab (bookmarkable)
+// #loot, #rep, #mile, #res, #ev, #bat, #set open that tab (bookmarkable)
 addEventListener("DOMContentLoaded", () => { const b = document.getElementById("nav" + location.hash.slice(1, 2).toUpperCase() + location.hash.slice(2)); if (b) b.click(); });
 
 // --- settings tab ------------------------------------------------------
@@ -507,6 +546,7 @@ LOOT.setIconFn(iconFor);
 LOOT.init();
 MILE.init();
 RESEARCH.init();
+EVENTS.init();
 BATTLE.init();
 </script>
 </body>

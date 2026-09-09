@@ -15,6 +15,7 @@ tab, updated every few seconds while you play. Nothing leaves your machine.
 | **Reputation** | Standing with every faction, biggest first. Gained and spent per day, average per day, and a chart of your standing day by day. Same log as Loot, so it works from the first run. |
 | **Milestones** | A timeline of building levels, research levels, ship tiers and ship levels, with a per-day chart. |
 | **Research** | Every research project the game has, tree by tree, against your levels. Finished, available now, or locked with the building or research that blocks it. Next level's cost and time. |
+| **Events** | Dailies with what is done, every event with state, time left, milestone progress and points, and the objectives of the one you pick. Straight from the game's own event list. |
 | **Battles** | Each battle: system, your ship and crew, opponent and level, result (kill, no kill, ship lost) and hull damage dealt. Summarised from the game's own battle journals. |
 | **Settings** | Theme (four looks), alarm, game folder, battle-journal on/off and retention, names and icons refresh, About page. |
 
