@@ -73,7 +73,7 @@ Details, settings and file locations: [viewer/README.md](viewer/README.md).
 Two repositories, side by side in one folder. The build script looks for the mod at `..\stfc-mod`.
 
 ```
-C:\DEV\STFC  yeoman\      this repository
+C:\DEV\STFC\n  yeoman\      this repository
   stfc-mod\    the mod fork, branch yeoman
 ```
 
@@ -103,8 +103,7 @@ cd stfc-mod
 xmake -y
 ```
 
-That produces `build\windowsd
-elease\stfc-community-mod.dll`. Then build the exe:
+That produces `build\windowsdelease\stfc-community-mod.dll`. Then build the exe:
 
 ```
 cd ..\yeomaniewer
