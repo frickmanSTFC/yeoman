@@ -23,15 +23,18 @@ const EVENTS = (() => {
 
   // --- classification ----------------------------------------------------------------------------
   const isDaily = e => e.IsDailyGoalsEvent || e.IsDailyMilestone;
-  // chip text, in the order that matters: something to collect beats everything else
+  // chip text, in the order that matters: something to collect beats everything else.
+  // The game's "active" flags stay false for events it merely lists, so running means not closed
+  // and still on the clock.
   function stateOf(e) {
-    if (e.IsClaimable || (e.tiers || []).some(t => t.state === 2)) return "claim";
+    if (e.IsClaimable) return "claim";
     if (e.IsClosed || e.IsArchived) return "ended";
     if (e.IsComplete) return "done";
-    if (e.IsCurrentlyActive || e.IsActive) return "running";
+    if ((e.remaining_s ?? 0) > 0) return "running";
     return "ended";
   }
-  const tiersDone = e => (e.tiers || []).filter(t => t.state === 3 || t.state === 2).length;
+  // milestone tiers carry the score they need; reached = points already at or past it
+  const tiersDone = e => (e.tiers || []).filter(t => (e.points || 0) >= t.score).length;
   const tiersAll = e => (e.tiers || []).length;
   const goalDone = o => o.target > 0 ? o.cur >= o.target : o.claimable;
 
@@ -44,9 +47,11 @@ const EVENTS = (() => {
 
   // --- render ----------------------------------------------------------------------------------
   function render() {
+    // every daily goal is its own small event; it is done when the game marks it complete
     const dailies = data.events.filter(isDaily);
-    const goals = dailies.flatMap(e => (e.objectives || []).map(o => ({...o, ev: e})));
-    const done = goals.filter(goalDone).length;
+    const goals = dailies.map(e => ({id: e.id, name: e.name, cur: e.points || 0,
+      target: (e.tiers || [])[0]?.score || 0, claimable: e.IsClaimable, done: e.IsComplete}));
+    const done = goals.filter(g => g.done).length;
     const reset = Math.min(...dailies.map(e => e.remaining_s ?? Infinity));
     const list = filtered().sort((a, b) => {
       const o = {claim: 0, running: 1, done: 2, ended: 3};
@@ -64,16 +69,17 @@ const EVENTS = (() => {
 
     document.getElementById("evDailyHead").textContent = isFinite(reset) ? `reset in ${left(reset)}` : "";
     document.getElementById("evDailies").innerHTML = goals.map(o => `<tr>
-      <td class="${goalDone(o) ? "ok" : "no"}">${goalDone(o) ? "✓" : "·"}</td>
+      <td class="${o.done ? "ok" : "no"}">${o.done ? "✓" : "·"}</td>
       <td>${o.name || `Goal ${o.id}`}</td>
       <td>${o.target ? `${compact(o.cur)} / ${compact(o.target)} <span class="bar"><i style="width:${Math.min(100, 100 * o.cur / o.target)}%"></i></span>` : ""}</td>
-      <td><span class="chip ${goalDone(o) ? "done" : "todo"}">${goalDone(o) ? "done" : "to do"}</span></td></tr>`).join("")
+      <td><span class="chip ${o.done ? "done" : "todo"}">${o.done ? "done" : "to do"}</span></td></tr>`).join("")
       || `<tr><td colspan="4" class="dim">no daily goals in the list yet — open the events screen in the game once</td></tr>`;
 
     if (selected == null || !list.some(e => e.id == selected)) selected = list[0]?.id ?? null;
     document.getElementById("evBody").innerHTML = list.map(e => {
       const st = stateOf(e), n = e.next || {};
-      const toNext = n.max ? Math.max(0, n.max - n.cur) : 0;
+      const nextTier = (e.tiers || []).map(t => t.score).filter(sc => sc > (e.points || 0)).sort((a, b) => a - b)[0];
+      const toNext = nextTier ? nextTier - (e.points || 0) : 0;
       return `<tr data-id="${e.id}" class="${e.id == selected ? "sel" : ""}">
         <td>${name(e)}</td>
         <td><span class="chip ${st}">${st}</span></td>

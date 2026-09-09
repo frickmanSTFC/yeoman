@@ -2,13 +2,12 @@
 const assert = require("assert");
 const E = require("./events.js");
 
-// a tier ready to collect beats everything: that is a claim waiting
-assert.strictEqual(E.stateOf({IsCurrentlyActive: true, tiers: [{state: 3}, {state: 2}]}), "claim");
+// claimable beats everything; closed is ended even if complete; complete is done; on the clock is running
 assert.strictEqual(E.stateOf({IsClaimable: true, IsClosed: true}), "claim");
-// closed or archived is ended, even if it says complete
 assert.strictEqual(E.stateOf({IsClosed: true, IsComplete: true}), "ended");
-assert.strictEqual(E.stateOf({IsComplete: true, IsCurrentlyActive: true}), "done");
-assert.strictEqual(E.stateOf({IsCurrentlyActive: true}), "running");
+assert.strictEqual(E.stateOf({IsComplete: true, remaining_s: 500}), "done");
+assert.strictEqual(E.stateOf({remaining_s: 500}), "running");
+assert.strictEqual(E.stateOf({remaining_s: 0}), "ended");
 assert.strictEqual(E.stateOf({}), "ended");
 
 // a goal is done when its counter reaches the target; with no target, only when it is claimable
