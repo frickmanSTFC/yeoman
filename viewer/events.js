@@ -85,12 +85,20 @@ const EVENTS = (() => {
       <div class="tile"><span>events listed</span><b>${data.events.length}</b></div>`;
 
     document.getElementById("evDailyHead").textContent = isFinite(reset) ? `reset in ${left(reset)}` : "";
-    document.getElementById("evDailies").innerHTML = goals.map(o => `<tr>
+    // one column per group; the faction ones are told apart by name, the game exports no faction flag
+    const groups = [["Federation", /federation/i], ["Klingon", /klingon/i], ["Romulan", /romulan/i], ["Ex-Borg", /exborg|ex-borg/i], ["General", /./]];
+    const byGroup = groups.map(([label, re]) => ({label, rows: []}));
+    for (const o of goals) byGroup[groups.findIndex(([, re]) => re.test(o.name || ""))].rows.push(o);
+    const row = o => `<tr class="${o.done ? "gdone" : ""}">
       <td class="${o.done ? "ok" : "no"}">${o.done ? "✓" : "·"}</td>
       <td>${o.name || `Goal ${o.id}`}</td>
-      <td>${o.target ? `${compact(o.cur)} / ${compact(o.target)} <span class="bar"><i style="width:${Math.min(100, 100 * o.cur / o.target)}%"></i></span>` : ""}</td>
-      <td><span class="chip ${o.done ? "done" : "todo"}">${o.done ? "done" : "to do"}</span></td></tr>`).join("")
-      || `<tr><td colspan="4" class="dim">no daily goals in the list yet — open the events screen in the game once</td></tr>`;
+      <td class="num">${o.target ? `${compact(o.cur)} / ${compact(o.target)}` : ""}</td>
+      <td>${o.target ? `<span class="bar"><i style="width:${Math.min(100, 100 * o.cur / o.target)}%"></i></span>` : ""}</td></tr>`;
+    document.getElementById("evDailies").innerHTML = byGroup.filter(g => g.rows.length).map(g => `
+      <div class="dgroup"><table class="loot" style="min-width:0">
+        <thead><tr><th colspan="4">${g.label} <span class="gtot">${g.rows.filter(o => o.done).length} / ${g.rows.length}</span></th></tr></thead>
+        <tbody>${g.rows.map(row).join("")}</tbody></table></div>`).join("")
+      || `<p class="dim">no daily goals in the list yet — open the events screen in the game once</p>`;
 
     if (selected == null || !list.some(e => e.id == selected)) selected = list[0]?.id ?? null;
     document.getElementById("evBody").innerHTML = list.map(e => {

@@ -132,6 +132,10 @@
   .chip.claim { background: var(--gain); color: var(--accent-ink); } .chip.running { background: var(--accent4); color: var(--accent-ink); }
   .chip.ended { background: var(--bg3); color: var(--muted); } .chip.todo { background: var(--bg3); color: var(--muted); border: 1px solid var(--line); }
   .ok { color: var(--gain); } .no { color: var(--dim); } .bar.wide { width: 140px; }
+  .dgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr)); gap: .8rem 1rem; align-items: start; }
+  .dgroup table { min-width: 0; } .dgroup th { text-align: left; } .dgroup td { padding: .3rem .5rem; }
+  .dgroup td:first-child { width: 1.2rem; text-align: center; } .dgroup td:nth-child(2) { white-space: normal; } .dgroup .bar { width: 56px; margin-left: 0; }
+  .dgroup tr.gdone td { color: var(--muted); }
   .chip.available { background: var(--gain); color: var(--accent-ink); } .chip.locked { background: var(--bg3); color: var(--muted); } .chip.done { background: var(--accent3); color: var(--accent-ink); }
   table.loot { table-layout: fixed; min-width: 72rem; }
   table.loot th, table.loot td { padding: .35rem .55rem; vertical-align: middle;
