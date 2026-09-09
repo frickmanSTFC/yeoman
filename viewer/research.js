@@ -12,7 +12,8 @@ const RESEARCH = (() => {
 
   const TREE_TYPES = {0: "Standard", 1: "Ship cosmetics", 2: "Faction store", 3: "Fleet commanders",
                       4: "Artifacts", 5: "Challenge"};
-  const REQ = {1: "building", 2: "research", 3: "faction rank", 4: "alliance level"};
+  const REQ = {3: "faction rank", 4: "alliance level", 5: "officer rank", 6: "officer level",
+               7: "total officer level", 8: "ship tier", 9: "officers at tier", 10: "artifacts at level"};
 
   const compact = v => {
     const a = Math.abs(v), trim = x => x.toFixed(1).replace(/\.0$/, "");
@@ -42,12 +43,13 @@ const RESEARCH = (() => {
     for (const [type, target, lvl] of next.req || []) {
       if (type === 1 && (levels.building.get(target) ?? 0) < lvl) blockers.push(`${bldName(target)} ${lvl}`);
       if (type === 2 && (levels.research.get(target) ?? 0) < lvl) blockers.push(`${projName(target)} ${lvl}`);
-      // faction rank and alliance level are not in any log; they never block here (shown as a note)
+      // other kinds (faction rank, officer rank, ship tier...) are in no log; shown as a note only
     }
     return {cur, max, state: blockers.length ? "locked" : "available", next, blockers};
   }
 
-  const notes = next => (next?.req || []).filter(([t]) => t === 3 || t === 4)
+  // requirement kinds no log covers: shown as a note, never treated as a blocker
+  const notes = next => (next?.req || []).filter(([t]) => REQ[t])
     .map(([t, , l]) => `${REQ[t]} ${l}`).join(", ");
 
   // --- render ----------------------------------------------------------------------------------
