@@ -14,7 +14,7 @@ Copy-Item $dll (Join-Path $stage "mod\version.dll")
 
 Push-Location $here
 try {
-  python -m PyInstaller --noconfirm --onefile --name Yeoman --console `
+  python -m PyInstaller --noconfirm --clean --onefile --name Yeoman --console `
     --distpath (Join-Path $here "dist") --workpath (Join-Path $here "build\pyi") --specpath (Join-Path $here "build") `
     --add-data "$stage\web;web" --add-data "$stage\mod;mod" `
     --collect-all UnityPy --collect-all fmod_toolkit --collect-all archspec `
