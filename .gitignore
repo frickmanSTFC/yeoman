@@ -11,3 +11,5 @@ viewer/data/
 __pycache__/
 # per-machine game path
 viewer/settings.json
+# seeded design canvases (2 MB each, rebuilt from the .dc.html files)
+viewer/design*/*-theme.html
