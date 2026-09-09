@@ -96,6 +96,7 @@ const EVENTS = (() => {
       <td>${o.target ? `<span class="bar"><i style="width:${Math.min(100, 100 * o.cur / o.target)}%"></i></span>` : ""}</td></tr>`;
     // factions side by side on top; everything else below them, split into columns of its own
     const table = (label, rows, all) => `<div class="dgroup"><table class="loot" style="min-width:0">
+        <colgroup><col style="width:1.4rem"><col style="width:auto"><col style="width:6.5rem"><col style="width:4.2rem"></colgroup>
         <thead><tr><th colspan="4">${label}${all ? ` <span class="gtot">${all.filter(o => o.done).length} / ${all.length}</span>` : ""}</th></tr></thead>
         <tbody>${rows.map(row).join("")}</tbody></table></div>`;
     const factions = byGroup.slice(0, -1).filter(g => g.rows.length);
