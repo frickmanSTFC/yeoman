@@ -7,7 +7,7 @@
 
 const RESEARCH = (() => {
   let cat = {projects: {}, trees: {}}, levels = {research: new Map(), building: new Map()};
-  let specs = {building: {}, research: {}}, resources = {};
+  let specs = {building: {}, research: {}, officer: {}, faction: {}}, resources = {};
   let treeType = "0", search = "", stateFilter = "all";
 
   const TREE_TYPES = {0: "Standard", 1: "Ship cosmetics", 2: "Faction store", 3: "Fleet commanders",
@@ -31,7 +31,14 @@ const RESEARCH = (() => {
   const projName = id => fixName(cat.projects[id]?.name || specs.research?.[id]?.pretty) || `Research ${id}`;
   const bldName = id => specs.building?.[id]?.name || `Building ${id}`;
   const resName = id => resources[id]?.pretty || resources[id]?.name || `#${id}`;
-  const treeName = id => cat.trees[id]?.name || `Tree ${id} · ${(cat.trees[id]?.projects || []).length} projects`;
+  // fleet commander trees are named after the commander (an officer); faction store trees after the faction
+  const treeName = id => {
+    const t = cat.trees[id] || {};
+    const known = (t.projects || []).filter(pid => cat.projects[String(pid)]).length;
+    if (t.officer && specs.officer?.[t.officer]) return specs.officer[t.officer];
+    if (t.type === 2 && t.faction > 0 && specs.faction?.[t.faction]) return `${specs.faction[t.faction]} store`;
+    return t.name || `Tree ${id} · ${known} projects`;
+  };
 
   // --- the core question: for one project, where does it stand? ------------------------------
   // returns {cur, max, state: done|available|locked, next: level spec or null, blockers: [text]}
@@ -133,7 +140,7 @@ const RESEARCH = (() => {
       ]);
       cat = {projects: c.projects || {}, trees: c.trees || {}};
       levels = latestLevels(txt);
-      specs = Object.assign({building: {}, research: {}}, sp);
+      specs = Object.assign({building: {}, research: {}, officer: {}, faction: {}}, sp);
       resources = rs || {};
       st.textContent = `${Object.keys(cat.projects).length.toLocaleString()} research projects in `
         + `${Object.keys(cat.trees).length} trees · ${levels.research.size.toLocaleString()} with a known level`;
