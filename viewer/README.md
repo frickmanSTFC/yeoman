@@ -28,8 +28,11 @@ Close the Yeoman window to stop the page. To stop the auto-start, blank the `exe
 
 ## Updates
 
-A new `Yeoman.exe` carries a new mod. Close the game, run the new exe once, start the game.
-Every game update breaks the mod until a new Yeoman is built, so expect a new exe after game patches.
+Settings tab, Update, "check now", then "install and restart". Yeoman fetches the newest release from
+GitHub, swaps its own exe and restarts. The game can stay open; the new mod goes in the next time the
+game is closed and Yeoman runs once. By hand: unzip the new `Yeoman.exe` over the old one, same folder,
+close the game, run it once. Every game update breaks the mod until a new Yeoman is built, so expect a
+new release after game patches. `yeoman.log` next to the exe keeps everything the window printed.
 
 ## Where things live
 
