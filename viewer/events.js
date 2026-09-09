@@ -94,11 +94,19 @@ const EVENTS = (() => {
       <td>${o.name || `Goal ${o.id}`}</td>
       <td class="num">${o.target ? `${compact(o.cur)} / ${compact(o.target)}` : ""}</td>
       <td>${o.target ? `<span class="bar"><i style="width:${Math.min(100, 100 * o.cur / o.target)}%"></i></span>` : ""}</td></tr>`;
-    document.getElementById("evDailies").innerHTML = byGroup.filter(g => g.rows.length).map(g => `
-      <div class="dgroup"><table class="loot" style="min-width:0">
-        <thead><tr><th colspan="4">${g.label} <span class="gtot">${g.rows.filter(o => o.done).length} / ${g.rows.length}</span></th></tr></thead>
-        <tbody>${g.rows.map(row).join("")}</tbody></table></div>`).join("")
-      || `<p class="dim">no daily goals in the list yet — open the events screen in the game once</p>`;
+    // factions side by side on top; everything else below them, split into columns of its own
+    const table = (label, rows, all) => `<div class="dgroup"><table class="loot" style="min-width:0">
+        <thead><tr><th colspan="4">${label}${all ? ` <span class="gtot">${all.filter(o => o.done).length} / ${all.length}</span>` : ""}</th></tr></thead>
+        <tbody>${rows.map(row).join("")}</tbody></table></div>`;
+    const factions = byGroup.slice(0, -1).filter(g => g.rows.length);
+    const general = byGroup[byGroup.length - 1].rows;
+    const cols = Math.min(3, Math.max(1, Math.ceil(general.length / 10)));
+    const per = Math.ceil(general.length / cols);
+    document.getElementById("evDailies").innerHTML = (factions.length || general.length)
+      ? `<div class="dgrid">${factions.map(g => table(g.label, g.rows, g.rows)).join("")}</div>`
+        + (general.length ? `<div class="dgrid" style="margin-top:.8rem">${Array.from({length: cols}, (_, i) =>
+            table(i ? "&nbsp;" : "General", general.slice(i * per, (i + 1) * per), i ? null : general)).join("")}</div>` : "")
+      : `<p class="dim">no daily goals in the list yet — open the events screen in the game once</p>`;
 
     if (selected == null || !list.some(e => e.id == selected)) selected = list[0]?.id ?? null;
     document.getElementById("evBody").innerHTML = list.map(e => {
