@@ -1,0 +1,154 @@
+// Research tab: every research project the game has, against what this account has finished.
+//
+// The catalogue (community_patch_research.json) is what the game's own spec table says: each
+// project's tree, its levels, and what every level needs and costs. Your level in each project
+// and building comes from the milestones log, so nothing here is guessed: a project is "available"
+// only when every building and research requirement for its next level is met right now.
+
+const RESEARCH = (() => {
+  let cat = {projects: {}, trees: {}}, levels = {research: new Map(), building: new Map()};
+  let specs = {building: {}, research: {}}, resources = {};
+  let treeType = "0", search = "", hideDone = false;
+
+  const TREE_TYPES = {0: "Standard", 1: "Ship cosmetics", 2: "Faction store", 3: "Fleet commanders",
+                      4: "Artifacts", 5: "Challenge"};
+  const REQ = {1: "building", 2: "research", 3: "faction rank", 4: "alliance level"};
+
+  const compact = v => {
+    const a = Math.abs(v), trim = x => x.toFixed(1).replace(/\.0$/, "");
+    if (a >= 1e12) return trim(v / 1e12) + "T";
+    if (a >= 1e9)  return trim(v / 1e9) + "B";
+    if (a >= 1e6)  return trim(v / 1e6) + "M";
+    if (a >= 1e4)  return Math.round(v / 1e3) + "k";
+    return Math.round(v).toLocaleString();
+  };
+  const dur = s => s >= 86400 ? `${(s / 86400).toFixed(1)}d` : s >= 3600 ? `${(s / 3600).toFixed(1)}h` : `${Math.round(s / 60)}m`;
+
+  const projName = id => cat.projects[id]?.name || specs.research?.[id]?.pretty || `Research ${id}`;
+  const bldName = id => specs.building?.[id]?.name || `Building ${id}`;
+  const resName = id => resources[id]?.pretty || resources[id]?.name || `#${id}`;
+  const treeName = id => cat.trees[id]?.name || `Tree ${id}`;
+
+  // --- the core question: for one project, where does it stand? ------------------------------
+  // returns {cur, max, state: done|available|locked, next: level spec or null, blockers: [text]}
+  function status(id) {
+    const p = cat.projects[id];
+    if (!p) return null;
+    const cur = levels.research.get(Number(id)) ?? 0;
+    const max = p.levels.length;
+    if (cur >= max) return {cur, max, state: "done", next: null, blockers: []};
+    const next = p.levels[cur];                     // levels[i] is what it takes to reach level i+1
+    const blockers = [];
+    for (const [type, target, lvl] of next.req || []) {
+      if (type === 1 && (levels.building.get(target) ?? 0) < lvl) blockers.push(`${bldName(target)} ${lvl}`);
+      if (type === 2 && (levels.research.get(target) ?? 0) < lvl) blockers.push(`${projName(target)} ${lvl}`);
+      // faction rank and alliance level are not in any log; they never block here (shown as a note)
+    }
+    return {cur, max, state: blockers.length ? "locked" : "available", next, blockers};
+  }
+
+  const notes = next => (next?.req || []).filter(([t]) => t === 3 || t === 4)
+    .map(([t, , l]) => `${REQ[t]} ${l}`).join(", ");
+
+  // --- render ----------------------------------------------------------------------------------
+  function render() {
+    const q = search.toLowerCase();
+    const trees = Object.entries(cat.trees)
+      .filter(([, t]) => treeType === "all" || String(t.type) === treeType)
+      .map(([tid, t]) => {
+        const rows = (t.projects || []).map(String).filter(pid => cat.projects[pid])
+          .map(pid => ({pid, name: projName(pid), st: status(pid)}))
+          .filter(r => !q || r.name.toLowerCase().includes(q))
+          .filter(r => !hideDone || r.st.state !== "done");
+        const all = (t.projects || []).map(String).filter(pid => cat.projects[pid]).map(status);
+        const done = all.reduce((a, s) => a + s.cur, 0), total = all.reduce((a, s) => a + s.max, 0);
+        return {tid, name: treeName(tid), rows, done, total};
+      })
+      .filter(t => t.rows.length)
+      .sort((a, b) => a.name.localeCompare(b.name));
+
+    const counts = {done: 0, available: 0, locked: 0};
+    let lvDone = 0, lvTotal = 0;
+    for (const pid of Object.keys(cat.projects)) {
+      if (treeType !== "all" && String(cat.trees[cat.projects[pid].tree]?.type) !== treeType) continue;
+      const s = status(pid); counts[s.state]++; lvDone += s.cur; lvTotal += s.max;
+    }
+    document.getElementById("resStats").innerHTML = `
+      <div class="tile"><span>available now</span><b>${counts.available}</b></div>
+      <div class="tile"><span>locked</span><b>${counts.locked}</b></div>
+      <div class="tile"><span>finished</span><b>${counts.done}</b></div>
+      <div class="tile"><span>levels</span><b>${lvDone.toLocaleString()}</b><em>of ${lvTotal.toLocaleString()}</em></div>`;
+
+    const order = {available: 0, locked: 1, done: 2};
+    document.getElementById("resBody").innerHTML = trees.map(t => {
+      const pct = t.total ? Math.round(100 * t.done / t.total) : 0;
+      const head = `<tr class="grouphead"><td colspan="6">${t.name}
+        <span class="gtot">${t.done.toLocaleString()} / ${t.total.toLocaleString()} levels
+        <span class="bar"><i style="width:${pct}%"></i></span> ${pct}%</span></td></tr>`;
+      const body = t.rows.sort((a, b) => order[a.st.state] - order[b.st.state] || a.name.localeCompare(b.name))
+        .map(({pid, name, st}) => {
+          const n = st.next;
+          const need = st.state === "done" ? "" : st.blockers.map(b => `<span class="pill">${b}</span>`).join("")
+            + (notes(n) ? `<span class="dim">${notes(n)}</span>` : "");
+          const cost = n ? (n.cost || []).slice(0, 4).map(([rid, v]) => `<span class="pill">${resName(rid)} <small>${compact(v)}</small></span>`).join("") : "";
+          return `<tr data-id="${pid}">
+            <td>${name}</td>
+            <td class="num">${st.cur} / ${st.max}</td>
+            <td><span class="chip ${st.state}">${st.state}</span></td>
+            <td>${need}</td>
+            <td>${cost}</td>
+            <td class="num">${n ? dur(n.time) : ""}</td></tr>`;
+        }).join("");
+      return head + body;
+    }).join("") || `<tr><td colspan="6" class="dim">${Object.keys(cat.projects).length
+      ? "nothing matches" : "no research catalogue yet — start the game with the current mod, then refresh"}</td></tr>`;
+  }
+
+  // --- load ------------------------------------------------------------------------------------
+  function latestLevels(txt) {
+    const r = new Map(), b = new Map();
+    for (const line of txt.split("\n")) {
+      if (!line) continue;
+      let j; try { j = JSON.parse(line); } catch { continue; }
+      if (j.kind === "research") r.set(Number(j.id), j.v);        // log is in time order: last wins
+      else if (j.kind === "building") b.set(Number(j.id), j.v);
+    }
+    return {research: r, building: b};
+  }
+
+  async function load() {
+    const st = document.getElementById("resStatus");
+    st.textContent = "reading catalogue…";
+    const get = (u, d) => fetch(u, {cache: "no-store"}).then(r => r.ok ? r.json() : d).catch(() => d);
+    try {
+      const [c, txt, sp, rs] = await Promise.all([
+        get("/research.json", {projects: {}, trees: {}}),
+        fetch("/milestones.jsonl", {cache: "no-store"}).then(r => r.ok ? r.text() : "").catch(() => ""),
+        get("/specs.json", {}), get("/resources.json", {}),
+      ]);
+      cat = {projects: c.projects || {}, trees: c.trees || {}};
+      levels = latestLevels(txt);
+      specs = Object.assign({building: {}, research: {}}, sp);
+      resources = rs || {};
+      st.textContent = `${Object.keys(cat.projects).length.toLocaleString()} research projects in `
+        + `${Object.keys(cat.trees).length} trees · ${levels.research.size.toLocaleString()} with a known level`;
+      render();
+    } catch (e) {
+      st.textContent = "could not read the research catalogue (" + e.message + ")";
+    }
+  }
+
+  function init() {
+    document.getElementById("resType").onchange = e => { treeType = e.target.value; render(); };
+    document.getElementById("resFilter").oninput = e => { search = e.target.value.trim(); render(); };
+    const hd = document.getElementById("resHideDone");
+    hd.checked = hideDone = localStorage.getItem("resHideDone") === "1";
+    hd.onchange = () => { hideDone = hd.checked; localStorage.setItem("resHideDone", hideDone ? "1" : "0"); render(); };
+    document.getElementById("resReload").onclick = load;
+  }
+
+  return {init, load, status, latestLevels,
+          setCatalogue: c => { cat = c; }, setLevels: l => { levels = l; }, setSpecs: s => { specs = s; }};
+})();
+
+if (typeof module !== "undefined") module.exports = RESEARCH;   // for test_research.js

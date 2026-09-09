@@ -15,6 +15,7 @@
   <button id="navLoot">Loot</button>
   <button id="navRep">Reputation</button>
   <button id="navMile">Milestones</button>
+  <button id="navRes">Research</button>
   <button id="navBat">Battles</button>
   <button id="navSet">Settings</button>
 </nav>
@@ -152,6 +153,36 @@
 </table>
 </section>
 
+<section id="tab-res" hidden>
+<div id="resStatus">reading catalogue…</div>
+<div class="controls">
+  <label>trees
+    <select id="resType">
+      <option value="0" selected>standard</option>
+      <option value="2">faction store</option>
+      <option value="3">fleet commanders</option>
+      <option value="4">artifacts</option>
+      <option value="1">ship cosmetics</option>
+      <option value="5">challenge</option>
+      <option value="all">all</option>
+    </select>
+  </label>
+  <input id="resFilter" placeholder="filter research…" size="18">
+  <label><input type="checkbox" id="resHideDone"> hide finished</label>
+  <button id="resReload">refresh</button>
+</div>
+<div class="tiles" id="resStats"></div>
+
+<h2>Research <small class="dim">available means every building and research it needs is already there</small></h2>
+<table class="loot">
+  <colgroup><col style="width:auto"><col style="width:6rem"><col style="width:7rem"><col style="width:22rem">
+    <col style="width:24rem"><col style="width:5rem"></colgroup>
+  <thead><tr><th>Project</th><th class="num">Level</th><th>State</th><th>Next level needs</th>
+    <th>Next level costs</th><th class="num">Time</th></tr></thead>
+  <tbody id="resBody"></tbody>
+</table>
+</section>
+
 <section id="tab-bat" hidden>
 <div id="batStatus">reading battle journals…</div>
 <div class="controls">
@@ -232,6 +263,7 @@
 
 <script src="loot.js"></script>
 <script src="milestones.js"></script>
+<script src="research.js"></script>
 <script src="battles.js"></script>
 <script>
 const n = v => v == null ? "" : Math.round(v).toLocaleString();
@@ -408,7 +440,7 @@ themeSel.onchange = () => { localStorage.setItem("theme", themeSel.value); docum
 
 // --- tabs ----------------------------------------------------------------
 // ponytail: two sections and a hidden attribute. A router would be more code than the page.
-const tabs = {navFleets: "tab-fleets", navLoot: "tab-loot", navRep: "tab-rep", navMile: "tab-mile", navBat: "tab-bat", navSet: "tab-set"};
+const tabs = {navFleets: "tab-fleets", navLoot: "tab-loot", navRep: "tab-rep", navMile: "tab-mile", navRes: "tab-res", navBat: "tab-bat", navSet: "tab-set"};
 const loaded = {};
 for (const [btn, sec] of Object.entries(tabs)) {
   document.getElementById(btn).onclick = () => {
@@ -421,11 +453,12 @@ for (const [btn, sec] of Object.entries(tabs)) {
     if (sec === "tab-loot") LOOT.load();
     if (sec === "tab-rep") LOOT.showRep();
     if (sec === "tab-mile") MILE.load();
+    if (sec === "tab-res") RESEARCH.load();
     if (sec === "tab-bat") BATTLE.load();
     if (sec === "tab-set") SET.load();
   };
 }
-// #loot, #rep, #mile, #bat, #set open that tab (bookmarkable)
+// #loot, #rep, #mile, #res, #bat, #set open that tab (bookmarkable)
 addEventListener("DOMContentLoaded", () => { const b = document.getElementById("nav" + location.hash.slice(1, 2).toUpperCase() + location.hash.slice(2)); if (b) b.click(); });
 
 // --- settings tab ------------------------------------------------------
@@ -467,6 +500,7 @@ fetch("/settings.json").then(r => r.json()).then(s => { document.getElementById(
 LOOT.setIconFn(iconFor);
 LOOT.init();
 MILE.init();
+RESEARCH.init();
 BATTLE.init();
 </script>
 </body>
