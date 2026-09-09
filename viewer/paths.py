@@ -8,7 +8,7 @@
 """
 import json, os, sys
 
-VERSION = "0.7.1 beta"
+VERSION = "0.7.2 beta"
 FROZEN = getattr(sys, "frozen", False)
 BASE = os.path.dirname(sys.executable if FROZEN else os.path.abspath(__file__))
 WEB = os.path.join(getattr(sys, "_MEIPASS", BASE), "web") if FROZEN else BASE
