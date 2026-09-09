@@ -36,6 +36,14 @@
     --caps: uppercase; --track: .1em; --radius: 0; --pill: 0; --shadow: none; --num: #e8c94a;
   }
 
+  [data-theme="borg"] {
+    --bg: #020604; --bg2: #061009; --bg3: #0a1a0f; --line: #12331c; --text: #b9f3c4; --muted: #4f9a62; --dim: #2e5d3a;
+    --accent: #38ff6a; --accent2: #7dff9a; --accent3: #e8d23a; --accent4: #1fb54c; --accent-ink: #020604; --accent5: #1a6b33;
+    --warn: #e8d23a; --alert-bg: #102a12; --gain: #7dff9a; --spend: #e8d23a; --hold: #1fb54c;
+    --font: 'IBM Plex Sans', 'Segoe UI', sans-serif; --display: 'Share Tech Mono', 'JetBrains Mono', Consolas, monospace;
+    --caps: uppercase; --track: .12em; --radius: 0; --pill: 999px; --shadow: none; --num: #7dff9a;
+  }
+
   body { font: 14px var(--font); background: var(--bg); color: var(--text); margin: 1.5rem; }
   header { display: flex; align-items: center; gap: 1.2rem; margin-bottom: 1.2rem; border-bottom: 1px solid var(--line); padding-bottom: .8rem; }
   h1 { font: 700 1.8rem/1 var(--display); letter-spacing: var(--track); text-transform: var(--caps); color: var(--accent); margin: 0; }
@@ -247,6 +255,64 @@
   [data-theme="starfleet"] .dgroup th { color: var(--accent2); }
   [data-theme="starfleet"] tr.grouphead td { background: #17110c; color: var(--accent2); }
   [data-theme="starfleet"] .ver span { border-radius: 4px 4px 27px 4px; }
+
+
+  /* borg: black, green ink, a yellow axis; ring nodes mark sections and the rail, nothing is framed */
+  [data-theme="borg"] body { padding-left: 200px; padding-top: calc(1.5rem + 56px); }
+  [data-theme="borg"] body::before { content: ""; position: fixed; left: 197px; top: 0; bottom: 0; width: 2px; background: rgba(232,210,58,.55); z-index: 1; }
+  [data-theme="borg"] body::after { content: ""; position: fixed; left: 0; right: 0; top: calc(1.5rem + 42px); height: 2px; background: rgba(232,210,58,.55); z-index: 1; }
+  [data-theme="borg"] header { position: fixed; left: 1.5rem; top: 1.5rem; bottom: 1.5rem; width: 150px; flex-direction: column; align-items: stretch; gap: 10px; border: 0; padding: 0; margin: 0; }
+  [data-theme="borg"] h1 { height: 84px; color: var(--accent); font: 700 15px/1 var(--display); letter-spacing: .16em; display: flex; align-items: center; justify-content: flex-end; padding: 0 0 0 78px; position: relative; margin: 0; }
+  [data-theme="borg"] h1::before { content: ""; position: absolute; left: 6px; top: 22px; width: 40px; height: 40px; border-radius: 50%; background: var(--accent);
+      box-shadow: 0 0 0 4px var(--bg), 0 0 0 7px var(--accent4), 0 0 0 12px var(--bg), 0 0 0 14px var(--accent5), 0 0 0 20px var(--bg), 0 0 0 22px var(--accent5), 0 0 18px 22px rgba(56,255,106,.25); }
+  [data-theme="borg"] nav { flex-direction: column; gap: 10px; position: relative; }
+  [data-theme="borg"] nav::before { content: ""; position: absolute; left: 13px; top: 0; bottom: 0; width: 2px; background: var(--accent5); }
+  [data-theme="borg"] nav button { height: 30px; border: 0; background: none; color: var(--muted); text-align: left; padding: 0 0 0 40px; font: 500 15px/1 var(--display); letter-spacing: .14em; position: relative; }
+  [data-theme="borg"] nav button::before { content: ""; position: absolute; left: 7px; top: 8px; width: 14px; height: 14px; border-radius: 50%; background: var(--bg); border: 2px solid var(--accent5); box-sizing: border-box; }
+  [data-theme="borg"] nav button.on { color: var(--accent); }
+  [data-theme="borg"] nav button.on::before { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 0 3px var(--bg), 0 0 0 5px var(--accent4), 0 0 10px 5px rgba(56,255,106,.35); }
+  [data-theme="borg"] nav button.redalert { background: none !important; color: #ff4d3d !important; }
+  [data-theme="borg"] nav button.redalert::before { background: #ff4d3d; border-color: #ff4d3d; box-shadow: 0 0 10px 4px rgba(255,77,61,.5); }
+  [data-theme="borg"] .ver { margin: auto 0 0; display: flex; flex-direction: column; gap: 10px; }
+  [data-theme="borg"] .ver::before { content: ""; display: block; height: 2px; background: repeating-linear-gradient(90deg, var(--accent5) 0 8px, transparent 8px 12px); }
+  [data-theme="borg"] .ver span { height: 34px; border: 1px solid var(--accent5); color: var(--accent4); font: 12px var(--display); letter-spacing: .2em; text-transform: uppercase; display: flex; align-items: center; justify-content: center; }
+  [data-theme="borg"] #redalert svg path, [data-theme="borg"] #redalert svg rect { fill: #ff4d3d; } [data-theme="borg"] #redalert svg text { fill: #ff4d3d; }
+  [data-theme="borg"] h2 { margin: 1.6rem 0 .5rem; padding: 0; color: var(--accent); font: 600 1.15rem var(--display); letter-spacing: .18em; display: flex; align-items: center; position: static; }
+  [data-theme="borg"] h2::before { content: ""; position: static; width: 14px; height: 14px; border-radius: 50%; background: var(--accent); flex: none;
+      box-shadow: 0 0 0 3px var(--bg), 0 0 0 5px var(--accent4), 0 0 0 8px var(--bg), 0 0 0 10px var(--accent5); margin: 0 22px 0 10px; }
+  [data-theme="borg"] h2::after { content: ""; flex: 1; height: 2px; margin-left: 16px; background: repeating-linear-gradient(90deg, var(--accent5) 0 8px, transparent 8px 12px); }
+  [data-theme="borg"] h2 small { color: var(--muted); margin-left: .6rem; }
+  [data-theme="borg"] th { color: var(--accent); font-size: .74rem; border-bottom: 1px solid var(--line); }
+  [data-theme="borg"] td { border-bottom: 1px dotted #143d1f; }
+  [data-theme="borg"] td.num { font-family: var(--display); font-size: .95rem; }
+  [data-theme="borg"] tr.sel td { background: #081a0c; }
+  [data-theme="borg"] tr.grouphead td { background: #061409; color: var(--accent2); }
+  [data-theme="borg"] .mining { color: var(--accent2); } [data-theme="borg"] .docked { color: var(--dim); }
+  [data-theme="borg"] .tile { background: none; border: 1px solid var(--accent5); border-left: 1px solid var(--accent5); border-radius: 0; position: relative; padding-left: 2rem; }
+  [data-theme="borg"] .tile::before { content: ""; position: absolute; left: 12px; top: 16px; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 2px var(--bg), 0 0 0 3px var(--accent5); }
+  [data-theme="borg"] .tile span { color: var(--accent4); } [data-theme="borg"] .tile b { font-family: var(--display); color: var(--accent2); }
+  [data-theme="borg"] .controls { border-bottom: 1px dotted var(--accent5); padding-bottom: .6rem; }
+  [data-theme="borg"] .controls select, [data-theme="borg"] .controls input, [data-theme="borg"] .grp select, [data-theme="borg"] .grp input:not([type=checkbox]) {
+      border: 1px solid var(--accent5); border-radius: 0; background: #041008; color: var(--accent2); font-family: var(--display); }
+  [data-theme="borg"] .controls button, [data-theme="borg"] .grp button, [data-theme="borg"] button.clear {
+      border: 1px solid var(--accent); border-radius: 999px; background: transparent; color: var(--accent); font: 500 .8rem var(--display); letter-spacing: .12em; text-transform: uppercase; padding: .2rem .9rem; }
+  [data-theme="borg"] .grp { background: none; border: 1px solid var(--accent5); border-radius: 0; }
+  [data-theme="borg"] .grp > div { border-bottom: 1px dotted #143d1f; }
+  [data-theme="borg"] .bar { height: 8px; width: 96px; border-radius: 0; background: #071a0c; border: 1px solid var(--accent5); }
+  [data-theme="borg"] .bar > i { background: var(--accent); box-shadow: 0 0 8px rgba(56,255,106,.6); }
+  [data-theme="borg"] .bar.hp > i { background: var(--accent3); box-shadow: 0 0 8px rgba(232,210,58,.5); }
+  [data-theme="borg"] .bar.sh > i { background: var(--accent4); box-shadow: none; }
+  [data-theme="borg"] .dgroup .bar { width: 100%; max-width: 56px; } [data-theme="borg"] .dgroup td.num { font-size: .8rem; }
+  [data-theme="borg"] .pill { border-radius: 999px; background: #041008; border: 1px solid var(--accent5); color: var(--text); }
+  [data-theme="borg"] .pill.captain { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  [data-theme="borg"] .badge { background: var(--accent3); color: var(--accent-ink); border-radius: 0; }
+  [data-theme="borg"] tr.alert td { background: #0d1f10; }
+  [data-theme="borg"] .chip { border-radius: 0; font-family: var(--display); }
+  [data-theme="borg"] .chip.kill, [data-theme="borg"] .chip.available, [data-theme="borg"] .chip.claim { background: var(--accent); }
+  [data-theme="borg"] .chip.loss { background: var(--accent3); } [data-theme="borg"] .chip.nokill, [data-theme="borg"] .chip.locked, [data-theme="borg"] .chip.ended, [data-theme="borg"] .chip.todo { background: #0a2a12; color: var(--muted); border: 1px solid var(--accent5); }
+  [data-theme="borg"] .chip.done { background: var(--accent4); } [data-theme="borg"] .chip.running { background: var(--accent5); color: var(--text); }
+  [data-theme="borg"] #status, [data-theme="borg"] #lootStatus, [data-theme="borg"] #mileStatus, [data-theme="borg"] #batStatus, [data-theme="borg"] #evStatus, [data-theme="borg"] #resStatus, [data-theme="borg"] #setStatus { font-family: var(--display); letter-spacing: .08em; }
+  [data-theme="borg"] #lootDetail h2::after, [data-theme="borg"] #repDetail h2::after { display: none; }
 
   /* klingon: black screens in red frames on riveted iron; red is the ink, yellow marks what is live */
   [data-theme="klingon"] body { padding-left: 190px; background:

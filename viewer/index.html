@@ -3,11 +3,15 @@
 <head>
 <meta charset="utf-8">
 <title>Yeoman</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Teko:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Teko:wght@500;600;700&family=Share+Tech+Mono&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;700&display=swap">
 <link rel="stylesheet" href="yeoman.css">
 </head>
 <body>
-<script>document.documentElement.dataset.theme = localStorage.getItem("theme") || "starfleet";</script>
+<script>
+// ?theme=name in the address picks a theme and remembers it; otherwise the saved one
+{ const q = new URLSearchParams(location.search).get("theme"); if (q) localStorage.setItem("theme", q); }
+document.documentElement.dataset.theme = localStorage.getItem("theme") || "starfleet";
+</script>
 <header>
 <h1>Yeoman</h1>
 <div id="redalert" hidden title="a ship needs you: protected cargo full or node empty">
@@ -297,6 +301,7 @@
       <option value="daylight">Daylight</option>
       <option value="arcade">Arcade</option>
       <option value="klingon">Klingon</option>
+      <option value="borg">Borg</option>
     </select></div></div>
   <div><span>Alarm</span><div><label><input type="checkbox" id="alarm"> beep when protected cargo is full or the node is empty</label><button id="test">test sound</button></div></div>
 </div>

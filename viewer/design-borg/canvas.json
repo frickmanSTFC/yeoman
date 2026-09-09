@@ -1,0 +1,5 @@
+{"pages":[{"id":"page-1","name":"Borg (chosen)"},{"id":"page-2","name":"Other option"}],
+ "artboards":[
+ {"file":"Main.dc.html","title":"Fleets · Collective","x":0,"y":0,"w":1500,"h":780,"page":"page-1"},
+ {"file":"Cube.dc.html","title":"Direction B · Cube","x":0,"y":0,"w":1500,"h":800,"page":"page-2"}],
+ "launch":{"view":"canvas","page":"page-1"}}
