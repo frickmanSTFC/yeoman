@@ -32,9 +32,14 @@ const RESEARCH = (() => {
   const bldName = id => specs.building?.[id]?.name || `Building ${id}`;
   const resName = id => resources[id]?.pretty || resources[id]?.name || `#${id}`;
   // fleet commander trees are named after the commander (an officer); faction store trees after the faction
+  // a project with one level that costs nothing, takes no time and needs nothing is a flag the game
+  // keeps for itself (store unlocks, challenge markers), not research anyone can do
+  const isReal = p => (p.levels || []).some(l => l.time || (l.cost || []).length || (l.req || []).length);
+  const realIds = t => (t.projects || []).map(String).filter(pid => cat.projects[pid] && isReal(cat.projects[pid]));
+
   const treeName = id => {
     const t = cat.trees[id] || {};
-    const known = (t.projects || []).filter(pid => cat.projects[String(pid)]).length;
+    const known = realIds(t).length;
     if (t.officer && specs.officer?.[t.officer]) return specs.officer[t.officer];
     if (t.type === 2 && t.faction > 0 && specs.faction?.[t.faction]) return `${specs.faction[t.faction]} store`;
     return t.name || `Tree ${id} · ${known} projects`;
@@ -68,11 +73,11 @@ const RESEARCH = (() => {
     const trees = Object.entries(cat.trees)
       .filter(([, t]) => treeType === "all" || String(t.type) === treeType)
       .map(([tid, t]) => {
-        const rows = (t.projects || []).map(String).filter(pid => cat.projects[pid])
+        const rows = realIds(t)
           .map(pid => ({pid, name: projName(pid), st: status(pid)}))
           .filter(r => !q || r.name.toLowerCase().includes(q))
           .filter(r => stateFilter === "all" || r.st.state === stateFilter);
-        const all = (t.projects || []).map(String).filter(pid => cat.projects[pid]).map(status);
+        const all = realIds(t).map(status);
         const done = all.reduce((a, s) => a + s.cur, 0), total = all.reduce((a, s) => a + s.max, 0);
         return {tid, name: treeName(tid), rows, done, total};
       })
@@ -82,6 +87,7 @@ const RESEARCH = (() => {
     const counts = {done: 0, available: 0, locked: 0};
     let lvDone = 0, lvTotal = 0;
     for (const pid of Object.keys(cat.projects)) {
+      if (!isReal(cat.projects[pid])) continue;
       if (treeType !== "all" && String(cat.trees[cat.projects[pid].tree]?.type) !== treeType) continue;
       const s = status(pid); counts[s.state]++; lvDone += s.cur; lvTotal += s.max;
     }
@@ -159,7 +165,7 @@ const RESEARCH = (() => {
     document.getElementById("resReload").onclick = load;
   }
 
-  return {init, load, status, latestLevels, fixName,
+  return {init, load, status, latestLevels, fixName, isReal,
           setCatalogue: c => { cat = c; }, setLevels: l => { levels = l; }, setSpecs: s => { specs = s; }};
 })();
 

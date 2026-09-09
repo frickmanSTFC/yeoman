@@ -38,4 +38,6 @@ assert.strictEqual(lv.building.get(5), 9);
 
 assert.strictEqual(R.fixName("6⇵ Offensive Explorers"), "G6 Offensive Explorers", "grade glyph becomes G6");
 assert.strictEqual(R.fixName("3⇴ Isogen Extraction"), "T3 Isogen Extraction", "isogen tier glyph becomes T3");
+assert.strictEqual(R.isReal({levels: [{req: [], cost: [], time: 0}]}), false, "a free instant one-level node is a flag, not research");
+assert.strictEqual(R.isReal({levels: [{req: [], cost: [[1, 5]], time: 0}]}), true, "anything with a cost is real");
 console.log("research maths OK");
