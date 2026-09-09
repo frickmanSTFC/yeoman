@@ -28,7 +28,7 @@ const RESEARCH = (() => {
   const projName = id => cat.projects[id]?.name || specs.research?.[id]?.pretty || `Research ${id}`;
   const bldName = id => specs.building?.[id]?.name || `Building ${id}`;
   const resName = id => resources[id]?.pretty || resources[id]?.name || `#${id}`;
-  const treeName = id => cat.trees[id]?.name || `Tree ${id}`;
+  const treeName = id => cat.trees[id]?.name || `Tree ${id} · ${(cat.trees[id]?.projects || []).length} projects`;
 
   // --- the core question: for one project, where does it stand? ------------------------------
   // returns {cur, max, state: done|available|locked, next: level spec or null, blockers: [text]}
@@ -67,7 +67,7 @@ const RESEARCH = (() => {
         return {tid, name: treeName(tid), rows, done, total};
       })
       .filter(t => t.rows.length)
-      .sort((a, b) => a.name.localeCompare(b.name));
+      .sort((a, b) => b.total - a.total);          // biggest tree first, the way the game's tabs read
 
     const counts = {done: 0, available: 0, locked: 0};
     let lvDone = 0, lvTotal = 0;
