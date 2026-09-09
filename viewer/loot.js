@@ -12,6 +12,9 @@ const LOOT = (() => {
 
   let rows = [], specs = {}, selected = null, rangeDays = 14, filter = "", todayOnly = false, groupBy = false;
   let showHidden = false;
+  // The Reputation tab is the same log seen through a filter: the game's "Faction points" type.
+  const FACTION_SUBTYPE = 7;
+  let repRange = 14, repSelected = null;
 
   // Resources the user has flagged as not worth seeing. Kept in the browser, so it survives F5.
   const store = typeof localStorage !== "undefined" ? localStorage : null;   // absent under node
@@ -283,26 +286,35 @@ const LOOT = (() => {
     return `<svg viewBox="0 0 ${W} ${H}" class="spark">${bars}</svg>`;
   }
 
-  function rowFor(id, t, days, keys, have, daysCovered) {
+  function rowFor(id, t, days, keys, have, daysCovered, sel = selected, hideBox = true) {
     const ico = LOOTICON({...specOf(id), id});   // the art id is what the game's icon map is keyed by
-    return `<tr data-id="${id}" class="${selected == id ? "sel" : ""}">
-      <td class="res" title="${nameOf(id)}"><input type="checkbox" class="hide" title="hide this resource"
-          ${hidden.has(id) ? "checked" : ""}>${ico}<span>${nameOf(id)}</span></td>
+    const box = hideBox ? `<input type="checkbox" class="hide" title="hide this resource" ${hidden.has(id) ? "checked" : ""}>` : "";
+    return `<tr data-id="${id}" class="${sel == id ? "sel" : ""}">
+      <td class="res" title="${nameOf(id)}">${box}${ico}<span>${nameOf(id)}</span></td>
       <td class="num have">${compact(have.get(id) ?? 0)}</td>
       <td class="num">${t.today ? compact(t.today) : ""}</td>
       <td class="num">${t.yday ? compact(t.yday) : ""}</td>
-      <td class="num">${compact(t.g / daysCovered)}</td>
-      <td class="num gain">${compact(t.g)}</td>
+      <td class="num">${t.g ? compact(t.g / daysCovered) : ""}</td>
+      <td class="num gain">${t.g ? compact(t.g) : ""}</td>
       <td class="num spend">${t.s ? compact(t.s) : ""}</td>
-      <td class="num">${compact(t.g - t.s)}</td>
+      <td class="num">${t.g || t.s ? compact(t.g - t.s) : ""}</td>
       <td>${sparkline(days, id, keys.slice(-14))}</td></tr>`;
   }
 
+  const isFaction = id => specOf(id).subtype === FACTION_SUBTYPE;
+  // every faction the account holds points in, biggest standing first, moved in range or not
+  const repIds = have => [...have.entries()].filter(([id, v]) => isFaction(id) && v > 0)
+                                            .sort((a, b) => b[1] - a[1]).map(([id]) => id);
+
   // --- render -----------------------------------------------------------------
-  function render() {
+  function render() { renderView("loot"); }
+  function renderRep() { renderView("rep"); }
+
+  function renderView(view) {
+    const rep = view === "rep";
     const days = aggregate();
     const have = stock();
-    const keys = dayList(days, rangeDays);
+    const keys = dayList(days, rep ? repRange : rangeDays);
     const inRange = new Set(keys);
     const today = keys[keys.length - 1], yesterday = keys[keys.length - 2];
 
@@ -317,7 +329,12 @@ const LOOT = (() => {
       }
     }
 
+    if (rep) {
+      renderRepView(days, have, keys, totals);
+      return;
+    }
     let list = [...totals.entries()]
+      .filter(([id]) => !isFaction(id))                     // factions have their own tab
       .filter(([id]) => showHidden || !hidden.has(id))
       .filter(([id]) => !filter || nameOf(id).toLowerCase().includes(filter));
     const lbl = document.getElementById("lootShowHiddenN");
@@ -393,8 +410,47 @@ const LOOT = (() => {
       ${dayChart(days, sel, keys)}
       <h2>Most held each day <small class="dim">peak amount in the account</small></h2>
       ${heldChart(peakByDay(), sel, keys)}`;
+    hookTips("#lootDetail svg");
+  }
 
-    for (const svg of document.querySelectorAll("#lootDetail svg")) {
+  // Reputation: every faction with points, sorted by standing, whether or not it moved in range.
+  function renderRepView(days, have, keys, totals) {
+    const ids = repIds(have);
+    const daysCovered = keys.length || 1;
+    const tot = id => totals.get(id) || {g: 0, s: 0, today: 0, yday: 0};
+    const best = [...ids].sort((a, b) => tot(b).g - tot(a).g)[0];
+    document.getElementById("repStats").innerHTML = `
+      <div class="tile"><span>factions</span><b>${ids.length}</b></div>
+      <div class="tile"><span>days in range</span><b>${daysCovered}</b></div>
+      <div class="tile"><span>biggest gain</span><b>${best && tot(best).g ? nameOf(best) : "—"}</b>
+        <em>${best && tot(best).g ? compact(tot(best).g) : ""}</em></div>`;
+    if (!ids.length) {
+      document.getElementById("repBody").innerHTML =
+        `<tr><td colspan="9" class="dim">no faction points recorded yet — play for a bit, then hit refresh</td></tr>`;
+      document.getElementById("repDetail").innerHTML = "";
+      return;
+    }
+    if (repSelected == null || !ids.includes(Number(repSelected))) repSelected = ids[0];
+    document.getElementById("repBody").innerHTML =
+      ids.map(id => rowFor(id, tot(id), days, keys, have, daysCovered, repSelected, false)).join("");
+
+    const sel = Number(repSelected), st = tot(sel);
+    document.getElementById("repDetail").innerHTML = `
+      <h2>${nameOf(sel)} <small class="dim">per day</small></h2>
+      <div class="legend">
+        <span><i style="background:${GAIN}"></i>gained ${compact(st.g)}</span>
+        <span><i style="background:${SPEND}"></i>spent ${compact(st.s)}</span>
+        <span class="dim">${compact(st.g / daysCovered)} / day average</span>
+        <span class="dim">standing ${full(have.get(sel) ?? 0)}</span>
+      </div>
+      ${dayChart(days, sel, keys)}
+      <h2>Standing each day <small class="dim">highest reputation seen that day</small></h2>
+      ${heldChart(peakByDay(), sel, keys)}`;
+    hookTips("#repDetail svg");
+  }
+
+  function hookTips(selector) {
+    for (const svg of document.querySelectorAll(selector)) {
       svg.onmousemove = e => {
         const t = e.target.closest("[data-day]"); if (!t) return tip.hide();
         tip.show(t.dataset.held !== undefined
@@ -426,12 +482,22 @@ const LOOT = (() => {
       st.textContent = `${rows.length.toLocaleString()} entries · ${named} resource names`
         + (named ? "" : " · names arrive after the next game restart");
       render();
+      if (document.getElementById("repBody")) renderRep();
     } catch (e) {
       st.textContent = "could not read the loot log (" + e.message + ")";
     }
   }
 
   function init() {
+    const rr = document.getElementById("repRange");
+    if (rr) {
+      rr.onchange = e => { repRange = e.target.value === "all" ? "all" : Number(e.target.value); renderRep(); };
+      document.getElementById("repReload").onclick = load;
+      document.getElementById("repBody").onclick = e => {
+        const tr = e.target.closest("tr[data-id]"); if (!tr) return;
+        repSelected = tr.dataset.id; renderRep();
+      };
+    }
     document.getElementById("lootRange").onchange = e => {
       rangeDays = e.target.value === "all" ? "all" : Number(e.target.value); render(); };
     document.getElementById("lootFilter").oninput = e => { filter = e.target.value.toLowerCase().trim(); render(); };
@@ -489,8 +555,11 @@ const LOOT = (() => {
     || (specOf(b).grade || 0) - (specOf(a).grade || 0)
     || (specOf(b).rarity || 0) - (specOf(a).rarity || 0));
 
+  // the Reputation tab shares the loaded log: first visit loads it, later visits just redraw
+  const showRep = () => rows.length ? renderRep() : load();
+
   return {init, load, setIconFn, aggregate, dayList, stock, peakByDay, compact, groupOf, orderForTest,
-          groupDays, daysLabel, hidden,
+          groupDays, daysLabel, hidden, showRep, repIds,
           setRows: r => { rows = r; }, setSpecs: s => { specs = s; }};
 })();
 

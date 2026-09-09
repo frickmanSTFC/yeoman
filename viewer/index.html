@@ -13,6 +13,7 @@
 <nav>
   <button id="navFleets" class="on">Fleets</button>
   <button id="navLoot">Loot</button>
+  <button id="navRep">Reputation</button>
   <button id="navMile">Milestones</button>
   <button id="navBat">Battles</button>
   <button id="navSet">Settings</button>
@@ -78,6 +79,37 @@
     <th>Last 14 days</th>
   </tr></thead>
   <tbody id="lootBody"></tbody>
+</table>
+</section>
+
+<section id="tab-rep" hidden>
+<div class="controls">
+  <label>range
+    <select id="repRange">
+      <option value="7">7 days</option>
+      <option value="14" selected>14 days</option>
+      <option value="30">30 days</option>
+      <option value="all">all</option>
+    </select>
+  </label>
+  <button id="repReload">refresh</button>
+</div>
+<div class="tiles" id="repStats"></div>
+<div id="repDetail"></div>
+
+<h2>Per faction</h2>
+<table class="loot">
+  <colgroup>
+    <col style="width:auto"><col style="width:8.5rem"><col style="width:6.5rem"><col style="width:7rem">
+    <col style="width:7rem"><col style="width:7rem"><col style="width:7rem"><col style="width:7rem">
+    <col style="width:10rem">
+  </colgroup>
+  <thead><tr>
+    <th>Faction</th><th class="num">Standing</th><th class="num">Today</th><th class="num">Yesterday</th>
+    <th class="num">Avg / day</th><th class="num">Gained</th><th class="num">Spent</th><th class="num">Net</th>
+    <th>Last 14 days</th>
+  </tr></thead>
+  <tbody id="repBody"></tbody>
 </table>
 </section>
 
@@ -376,7 +408,7 @@ themeSel.onchange = () => { localStorage.setItem("theme", themeSel.value); docum
 
 // --- tabs ----------------------------------------------------------------
 // ponytail: two sections and a hidden attribute. A router would be more code than the page.
-const tabs = {navFleets: "tab-fleets", navLoot: "tab-loot", navMile: "tab-mile", navBat: "tab-bat", navSet: "tab-set"};
+const tabs = {navFleets: "tab-fleets", navLoot: "tab-loot", navRep: "tab-rep", navMile: "tab-mile", navBat: "tab-bat", navSet: "tab-set"};
 const loaded = {};
 for (const [btn, sec] of Object.entries(tabs)) {
   document.getElementById(btn).onclick = () => {
@@ -387,12 +419,13 @@ for (const [btn, sec] of Object.entries(tabs)) {
     if (loaded[sec]) return;
     loaded[sec] = true;
     if (sec === "tab-loot") LOOT.load();
+    if (sec === "tab-rep") LOOT.showRep();
     if (sec === "tab-mile") MILE.load();
     if (sec === "tab-bat") BATTLE.load();
     if (sec === "tab-set") SET.load();
   };
 }
-// #loot, #mile, #bat, #set open that tab (bookmarkable)
+// #loot, #rep, #mile, #bat, #set open that tab (bookmarkable)
 addEventListener("DOMContentLoaded", () => { const b = document.getElementById("nav" + location.hash.slice(1, 2).toUpperCase() + location.hash.slice(2)); if (b) b.click(); });
 
 // --- settings tab ------------------------------------------------------

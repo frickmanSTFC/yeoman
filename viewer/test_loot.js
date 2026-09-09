@@ -49,6 +49,19 @@ assert.strictEqual(LOOT.compact(12345), "12k");
 assert.strictEqual(LOOT.compact(2500000), "2.5M");
 assert.strictEqual(LOOT.compact(-3e9), "-3B");
 
+// Reputation tab: only the game's "Faction points" type (subtype 7), biggest standing first,
+// and a faction that never moved is still listed as long as it holds points
+LOOT.setSpecs({1: {subtype: 7, pretty: "Klingon Points"}, 2: {subtype: 7, pretty: "Gorn Points"},
+               3: {subtype: 3, pretty: "Ore"}, 4: {subtype: 7, pretty: "Vulcan Points"}});
+LOOT.setRows([
+  {t: noon("2026-09-01"), id: 1, v: 100}, {t: noon("2026-09-02"), id: 1, v: 150},
+  {t: noon("2026-09-01"), id: 2, v: 900},
+  {t: noon("2026-09-01"), id: 3, v: 5000}, {t: noon("2026-09-02"), id: 3, v: 6000},
+  {t: noon("2026-09-01"), id: 4, v: 0},
+]);
+assert.deepStrictEqual(LOOT.repIds(LOOT.stock()), [2, 1], "factions only, by standing, zero standing left out");
+LOOT.setSpecs({});
+
 // smoke run over the real log, if the game has written one
 const REAL = "C:\\Games\\Star Trek Fleet Command\\Star Trek Fleet Command\\default\\game\\community_patch_loot.jsonl";
 if (fs.existsSync(REAL)) {

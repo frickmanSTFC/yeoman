@@ -80,8 +80,8 @@
   [data-theme="starfleet"] nav { flex-direction: column; gap: 6px; }
   [data-theme="starfleet"] nav button { height: 48px; border: 0; border-radius: 4px; color: var(--accent-ink); text-align: right; padding: 0 14px; font-size: 15px; opacity: .55; }
   [data-theme="starfleet"] nav button:nth-child(1) { background: var(--accent2); } [data-theme="starfleet"] nav button:nth-child(2) { background: var(--accent3); }
-  [data-theme="starfleet"] nav button:nth-child(3) { background: var(--accent4); } [data-theme="starfleet"] nav button:nth-child(4) { background: var(--accent5); }
-  [data-theme="starfleet"] nav button:nth-child(5) { background: var(--muted); }
+  [data-theme="starfleet"] nav button:nth-child(3) { background: var(--accent); } [data-theme="starfleet"] nav button:nth-child(4) { background: var(--accent4); }
+  [data-theme="starfleet"] nav button:nth-child(5) { background: var(--accent5); } [data-theme="starfleet"] nav button:last-child { background: var(--muted); }
   [data-theme="starfleet"] nav button.on { opacity: 1; }
   [data-theme="starfleet"] .ver { margin: auto 0 0; display: flex; flex-direction: column; gap: 6px; }
   [data-theme="starfleet"] .ver::before { content: ""; display: block; height: 36px; border-radius: 4px; background: var(--line); }

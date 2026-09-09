@@ -12,6 +12,7 @@ tab, updated every few seconds while you play. Nothing leaves your machine.
 |---|---|
 | **Fleets** | Every ship: state, system, shield and hull, strength, officers on the bridge and below deck. Mining ships get resource, rate per hour, mined so far, node left, time left, cargo and protected cargo. Optional alarm when protected cargo is full or the node runs dry. |
 | **Loot** | Every resource in the account, tracked over time. Gained, spent and net per day, peak held per day, sparklines, filters, grouping by material family and grade. Built from a log the mod appends every time the game reports a resource change, so offline gains show up too. |
+| **Reputation** | Standing with every faction, biggest first. Gained and spent per day, average per day, and a chart of your standing day by day. Same log as Loot, so it works from the first run. |
 | **Milestones** | A timeline of building levels, research levels, ship tiers and ship levels, with a per-day chart. |
 | **Battles** | Each battle: system, your ship and crew, opponent and level, result (kill, no kill, ship lost) and hull damage dealt. Summarised from the game's own battle journals. |
 | **Settings** | Theme (four looks), alarm, game folder, battle-journal on/off and retention, names and icons refresh, About page. |
