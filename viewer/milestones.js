@@ -50,7 +50,8 @@ const MILE = (() => {
     if (kind === "building") return specs.building?.[String(id)]?.name || `Building ${id}`;
     if (kind === "research") {
       const s = specs.research?.[String(id)];
-      return s?.pretty || names.loca?.[String(s?.loca_id)] || `Research ${id}`;
+      const fix = n => n && n.replace(/(\d)⇵/g, "G$1").replace(/(\d)⇴/g, "T$1");   // grade / Isogen tier icons
+      return fix(s?.pretty || names.loca?.[String(s?.loca_id)]) || `Research ${id}`;
     }
     if (kind === "ship_tier" || kind === "ship_level") {
       const h = hullOf(id), spec = hulls?.[String(h)];

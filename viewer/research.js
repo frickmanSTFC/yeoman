@@ -8,7 +8,7 @@
 const RESEARCH = (() => {
   let cat = {projects: {}, trees: {}}, levels = {research: new Map(), building: new Map()};
   let specs = {building: {}, research: {}}, resources = {};
-  let treeType = "0", search = "", hideDone = false;
+  let treeType = "0", search = "", stateFilter = "all";
 
   const TREE_TYPES = {0: "Standard", 1: "Ship cosmetics", 2: "Faction store", 3: "Fleet commanders",
                       4: "Artifacts", 5: "Challenge"};
@@ -25,7 +25,10 @@ const RESEARCH = (() => {
   };
   const dur = s => s >= 86400 ? `${(s / 86400).toFixed(1)}d` : s >= 3600 ? `${(s / 3600).toFixed(1)}h` : `${Math.round(s / 60)}m`;
 
-  const projName = id => cat.projects[id]?.name || specs.research?.[id]?.pretty || `Research ${id}`;
+  // "6⇵ Explorer Casing" is "G6 Explorer Casing" in the game: ⇵ is its grade icon, drawn with a
+  // picture font we do not have. ⇴ is the Isogen tier icon; ▷ and ▶ read fine as they are.
+  const fixName = n => (n || "").replace(/(\d)⇵/g, "G$1").replace(/(\d)⇴/g, "T$1");
+  const projName = id => fixName(cat.projects[id]?.name || specs.research?.[id]?.pretty) || `Research ${id}`;
   const bldName = id => specs.building?.[id]?.name || `Building ${id}`;
   const resName = id => resources[id]?.pretty || resources[id]?.name || `#${id}`;
   const treeName = id => cat.trees[id]?.name || `Tree ${id} · ${(cat.trees[id]?.projects || []).length} projects`;
@@ -61,7 +64,7 @@ const RESEARCH = (() => {
         const rows = (t.projects || []).map(String).filter(pid => cat.projects[pid])
           .map(pid => ({pid, name: projName(pid), st: status(pid)}))
           .filter(r => !q || r.name.toLowerCase().includes(q))
-          .filter(r => !hideDone || r.st.state !== "done");
+          .filter(r => stateFilter === "all" || r.st.state === stateFilter);
         const all = (t.projects || []).map(String).filter(pid => cat.projects[pid]).map(status);
         const done = all.reduce((a, s) => a + s.cur, 0), total = all.reduce((a, s) => a + s.max, 0);
         return {tid, name: treeName(tid), rows, done, total};
@@ -143,13 +146,13 @@ const RESEARCH = (() => {
   function init() {
     document.getElementById("resType").onchange = e => { treeType = e.target.value; render(); };
     document.getElementById("resFilter").oninput = e => { search = e.target.value.trim(); render(); };
-    const hd = document.getElementById("resHideDone");
-    hd.checked = hideDone = localStorage.getItem("resHideDone") === "1";
-    hd.onchange = () => { hideDone = hd.checked; localStorage.setItem("resHideDone", hideDone ? "1" : "0"); render(); };
+    const sf = document.getElementById("resState");
+    sf.value = stateFilter = localStorage.getItem("resState") || "all";
+    sf.onchange = () => { stateFilter = sf.value; localStorage.setItem("resState", stateFilter); render(); };
     document.getElementById("resReload").onclick = load;
   }
 
-  return {init, load, status, latestLevels,
+  return {init, load, status, latestLevels, fixName,
           setCatalogue: c => { cat = c; }, setLevels: l => { levels = l; }, setSpecs: s => { specs = s; }};
 })();
 

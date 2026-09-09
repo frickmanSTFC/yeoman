@@ -168,7 +168,14 @@
     </select>
   </label>
   <input id="resFilter" placeholder="filter research…" size="18">
-  <label><input type="checkbox" id="resHideDone"> hide finished</label>
+  <label>show
+    <select id="resState">
+      <option value="all" selected>everything</option>
+      <option value="available">available now</option>
+      <option value="locked">locked</option>
+      <option value="done">finished</option>
+    </select>
+  </label>
   <button id="resReload">refresh</button>
 </div>
 <div class="tiles" id="resStats"></div>

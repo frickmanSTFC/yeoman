@@ -36,4 +36,6 @@ const lv = R.latestLevels('{"kind":"research","id":10,"t":1,"v":1}\n{"kind":"res
 assert.strictEqual(lv.research.get(10), 2);
 assert.strictEqual(lv.building.get(5), 9);
 
+assert.strictEqual(R.fixName("6⇵ Offensive Explorers"), "G6 Offensive Explorers", "grade glyph becomes G6");
+assert.strictEqual(R.fixName("3⇴ Isogen Extraction"), "T3 Isogen Extraction", "isogen tier glyph becomes T3");
 console.log("research maths OK");
