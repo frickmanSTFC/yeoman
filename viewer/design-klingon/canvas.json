@@ -1,0 +1,5 @@
+{"pages":[{"id":"page-1","name":"Klingon (chosen)"},{"id":"page-2","name":"Other option"}],
+ "artboards":[
+ {"file":"Main.dc.html","title":"Fleets · Klingon","x":0,"y":0,"w":1500,"h":760,"page":"page-1"},
+ {"file":"IronRail.dc.html","title":"Option A · Iron rail","x":0,"y":0,"w":1500,"h":720,"page":"page-2"}],
+ "launch":{"view":"canvas","page":"page-1"}}
