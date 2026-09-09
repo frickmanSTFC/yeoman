@@ -5,7 +5,16 @@
 // claimable, complete, and how far along each milestone and objective is.
 
 const EVENTS = (() => {
-  let data = {updated: 0, events: []}, view = "running", selected = null;
+  let data = {updated: 0, events: []}, view = "running", kind = "milestone", selected = null;
+
+  // The game's own event names end in a type tag: SMS / AMS = solo / alliance milestone,
+  // SLB / ALB = solo / alliance leaderboard. Split it off into a kind of its own.
+  const KINDS = {SMS: "solo milestone", AMS: "alliance milestone", SLB: "solo leaderboard", ALB: "alliance leaderboard"};
+  function kindOf(e) {
+    const m = /\s*[-–]\s*(SMS|AMS|SLB|ALB)\s*$/.exec(e.name || "");
+    return m ? m[1] : "";
+  }
+  const kindLabel = e => KINDS[kindOf(e)] || "";
 
   const compact = v => {
     const a = Math.abs(v), trim = x => x.toFixed(1).replace(/\.0$/, "");
@@ -19,7 +28,7 @@ const EVENTS = (() => {
     const d = Math.floor(s / 86400), h = Math.floor(s % 86400 / 3600), m = Math.floor(s % 3600 / 60);
     return d ? `${d}d ${h}h` : h ? `${h}h ${m}m` : `${m}m`;
   };
-  const name = e => e.name || `Event ${e.id}`;
+  const name = e => (e.name || "").replace(/\s*[-–]\s*(SMS|AMS|SLB|ALB)\s*$/, "") || `Event ${e.id}`;
 
   // --- classification ----------------------------------------------------------------------------
   const isDaily = e => e.IsDailyGoalsEvent || e.IsDailyMilestone;
@@ -33,13 +42,18 @@ const EVENTS = (() => {
     if ((e.remaining_s ?? 0) > 0) return "running";
     return "ended";
   }
-  // milestone tiers carry the score they need; reached = points already at or past it
-  const tiersDone = e => (e.tiers || []).filter(t => (e.points || 0) >= t.score).length;
+  // milestone tiers carry the score they need; reached = the game says so, or points are past it
+  const tierDone = (e, t) => t.state === 3 || t.state === 2 || (e.points || 0) >= t.score;
+  const tiersDone = e => (e.tiers || []).filter(t => tierDone(e, t)).length;
   const tiersAll = e => (e.tiers || []).length;
   const goalDone = o => o.target > 0 ? o.cur >= o.target : o.claimable;
 
   function filtered() {
-    const list = data.events.filter(e => !isDaily(e));
+    let list = data.events.filter(e => !isDaily(e));
+    if (kind === "milestone") list = list.filter(e => kindOf(e) === "SMS" || kindOf(e) === "AMS");
+    else if (kind === "solo") list = list.filter(e => kindOf(e) === "SMS" || kindOf(e) === "SLB");
+    else if (kind === "alliance") list = list.filter(e => kindOf(e) === "AMS" || kindOf(e) === "ALB");
+    else if (kind === "leaderboard") list = list.filter(e => kindOf(e) === "SLB" || kindOf(e) === "ALB");
     if (view === "all") return list;
     if (view === "ended") return list.filter(e => stateOf(e) === "ended");
     return list.filter(e => stateOf(e) !== "ended");
@@ -81,7 +95,7 @@ const EVENTS = (() => {
       const nextTier = (e.tiers || []).map(t => t.score).filter(sc => sc > (e.points || 0)).sort((a, b) => a - b)[0];
       const toNext = nextTier ? nextTier - (e.points || 0) : 0;
       return `<tr data-id="${e.id}" class="${e.id == selected ? "sel" : ""}">
-        <td>${name(e)}</td>
+        <td>${name(e)} <small class="dim">${kindLabel(e)}</small></td>
         <td><span class="chip ${st}">${st}</span></td>
         <td>${st === "ended" ? "—" : left(e.remaining_s)}</td>
         <td>${tiersAll(e) ? `${tiersDone(e)} / ${tiersAll(e)} <span class="bar wide"><i style="width:${100 * tiersDone(e) / tiersAll(e)}%"></i></span>` : ""}</td>
@@ -90,12 +104,15 @@ const EVENTS = (() => {
     }).join("") || `<tr><td colspan="6" class="dim">${data.events.length ? "nothing in this view" : "no events yet — start the game with the current mod, then refresh"}</td></tr>`;
 
     const sel = list.find(e => e.id == selected);
-    document.getElementById("evDetailHead").innerHTML = sel ? `${name(sel)} <small class="dim">objectives · ${left(sel.remaining_s)} left</small>` : "";
-    document.getElementById("evDetail").innerHTML = sel ? (sel.objectives || []).map(o => `<tr>
-      <td>${o.name || `Objective ${o.id}`}</td>
-      <td>${o.target ? `${compact(o.cur)} / ${compact(o.target)} <span class="bar"><i style="width:${Math.min(100, 100 * o.cur / o.target)}%"></i></span>` : compact(o.cur)}</td>
-      <td><span class="chip ${goalDone(o) ? "done" : "running"}">${goalDone(o) ? "done" : "running"}</span></td></tr>`).join("")
-      || `<tr><td colspan="3" class="dim">no objectives listed</td></tr>` : "";
+    document.getElementById("evDetailHead").innerHTML = sel ? `${name(sel)} <small class="dim">milestones · ${compact(sel.points || 0)} points · ${left(sel.remaining_s)} left</small>` : "";
+    document.getElementById("evDetail").innerHTML = sel ? (sel.tiers || []).map((t, i) => {
+      const done = tierDone(sel, t), pct = t.score ? Math.min(100, 100 * (sel.points || 0) / t.score) : 0;
+      const st = t.claimable || t.state === 2 ? "claim" : done ? "done" : "running";
+      return `<tr>
+      <td>Milestone ${i + 1}</td>
+      <td>${compact(Math.min(sel.points || 0, t.score))} / ${compact(t.score)} <span class="bar"><i style="width:${pct}%"></i></span></td>
+      <td><span class="chip ${st}">${st}</span></td></tr>`; }).join("")
+      || `<tr><td colspan="3" class="dim">no milestones listed</td></tr>` : "";
   }
 
   async function load() {
@@ -114,6 +131,9 @@ const EVENTS = (() => {
 
   function init() {
     document.getElementById("evView").onchange = e => { view = e.target.value; render(); };
+    const kb = document.getElementById("evKind");
+    kb.value = kind = localStorage.getItem("evKind") || "milestone";
+    kb.onchange = () => { kind = kb.value; localStorage.setItem("evKind", kind); render(); };
     document.getElementById("evReload").onclick = load;
     document.getElementById("evBody").onclick = e => {
       const tr = e.target.closest("tr[data-id]"); if (!tr) return;
@@ -121,7 +141,7 @@ const EVENTS = (() => {
     };
   }
 
-  return {init, load, stateOf, goalDone, setData: d => { data = d; }};
+  return {init, load, stateOf, goalDone, kindOf, name, setData: d => { data = d; }};
 })();
 
 if (typeof module !== "undefined") module.exports = EVENTS;   // for test_events.js

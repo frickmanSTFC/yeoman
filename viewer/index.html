@@ -199,6 +199,15 @@
       <option value="ended">ended</option>
     </select>
   </label>
+  <label>kind
+    <select id="evKind">
+      <option value="milestone" selected>milestone events</option>
+      <option value="solo">solo</option>
+      <option value="alliance">alliance</option>
+      <option value="leaderboard">leaderboards</option>
+      <option value="all">everything</option>
+    </select>
+  </label>
   <button id="evReload">refresh</button>
 </div>
 <div class="tiles" id="evStats"></div>
@@ -220,7 +229,7 @@
 <h2 id="evDetailHead"></h2>
 <table class="loot" style="min-width:0">
   <colgroup><col style="width:auto"><col style="width:16rem"><col style="width:8rem"></colgroup>
-  <thead><tr><th>Objective</th><th>Progress</th><th>State</th></tr></thead>
+  <thead><tr><th>Milestone</th><th>Progress</th><th>State</th></tr></thead>
   <tbody id="evDetail"></tbody>
 </table>
 </section>

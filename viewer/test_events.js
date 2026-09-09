@@ -16,4 +16,9 @@ assert.strictEqual(E.goalDone({cur: 2, target: 3}), false);
 assert.strictEqual(E.goalDone({cur: 0, target: 0, claimable: true}), true);
 assert.strictEqual(E.goalDone({cur: 5, target: 0, claimable: false}), false);
 
+// the type tag at the end of the game's name is the kind; the shown name loses it
+assert.strictEqual(E.kindOf({name: "Sector Strike - SMS"}), "SMS");
+assert.strictEqual(E.kindOf({name: "Interstellar Dominance Meta - SLB"}), "SLB");
+assert.strictEqual(E.kindOf({name: "Daily Goal"}), "");
+assert.strictEqual(E.name({name: "Sector Strike - SMS"}), "Sector Strike");
 console.log("events rules OK");
