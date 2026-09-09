@@ -10,6 +10,23 @@
 <script>document.documentElement.dataset.theme = localStorage.getItem("theme") || "starfleet";</script>
 <header>
 <h1>Yeoman</h1>
+<div id="redalert" hidden title="a ship needs you: protected cargo full or node empty">
+<svg viewBox="0 0 150 96" xmlns="http://www.w3.org/2000/svg" aria-label="alert, condition red">
+  <g fill="#e11d12">
+    <path d="M6 22 L40 6 H110 L144 22 L110 38 H40 Z"/>
+    <path d="M6 74 L40 58 H110 L144 74 L110 90 H40 Z"/>
+    <rect x="6" y="41" width="10" height="14" rx="3"/><rect x="134" y="41" width="10" height="14" rx="3"/>
+  </g>
+  <g fill="#0a0403">
+    <rect x="44" y="12" width="62" height="20"/><rect x="44" y="64" width="62" height="20"/>
+  </g>
+  <g fill="#ff5a3c">
+    <rect x="44" y="12" width="62" height="3"/><rect x="44" y="18" width="62" height="3"/><rect x="44" y="24" width="62" height="3"/>
+    <rect x="44" y="69" width="62" height="3"/><rect x="44" y="75" width="62" height="3"/><rect x="44" y="81" width="62" height="3"/>
+  </g>
+  <text x="75" y="52" text-anchor="middle" font-family="Teko, Rajdhani, 'Arial Narrow', sans-serif" font-weight="700" font-size="24" letter-spacing="3" fill="#e11d12">ALERT</text>
+</svg>
+</div>
 <nav>
   <button id="navFleets" class="on">Fleets</button>
   <button id="navLoot">Loot</button>
@@ -478,6 +495,7 @@ async function tick() {
     // whether or not the beep is on
     const red = d.fleets.some(f => alertsFor(f).length && !muted.has(f.id));
     document.getElementById("navFleets").classList.toggle("redalert", red);
+    document.getElementById("redalert").hidden = !red;
     document.title = red ? "⚠ Yeoman" : "Yeoman";
     document.getElementById("mining").innerHTML = mining.join("") || `<tr><td colspan="12" class="dim">no ships mining</td></tr>`;
     document.getElementById("other").innerHTML = other.join("") || `<tr><td colspan="11" class="dim">none</td></tr>`;

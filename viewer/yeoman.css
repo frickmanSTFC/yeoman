@@ -135,6 +135,10 @@
   /* red alert: a ship needs you (protected cargo full or node empty) and nobody has cleared it */
   @keyframes redalert { from { background: #d8351f; } to { background: #6a1108; } }
   nav button.redalert { animation: redalert .9s ease-in-out infinite alternate; background: #d8351f !important; color: #fff !important; opacity: 1 !important; }
+  #redalert { margin: .4rem 0; animation: redpulse .8s ease-in-out infinite alternate; }
+  #redalert svg { display: block; width: 100%; height: auto; }
+  @keyframes redpulse { from { opacity: 1; filter: drop-shadow(0 0 6px #e11d12); } to { opacity: .35; filter: none; } }
+  [data-theme="daylight"] #redalert { background: #1a0c08; border-radius: 8px; padding: 4px; }
   /* starred dailies */
   .dgroup td.star { cursor: pointer; color: var(--dim); text-align: center; padding: .25rem 0; user-select: none; }
   .dgroup td.star.on { color: var(--gain); }
