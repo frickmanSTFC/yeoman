@@ -1,0 +1,7 @@
+{"pages":[{"id":"page-1","name":"Chosen: Ops + top band"},{"id":"page-2","name":"Directions"}],
+ "artboards":[
+ {"file":"Main.dc.html","title":"Fleets · Ops with top band","x":0,"y":0,"w":1500,"h":800,"page":"page-1"},
+ {"file":"Console.dc.html","title":"Direction A · Console","x":0,"y":0,"w":1500,"h":760,"page":"page-2"},
+ {"file":"Sheet.dc.html","title":"Direction B · Sheet","x":0,"y":900,"w":1500,"h":780,"page":"page-2"},
+ {"file":"Ops.dc.html","title":"Direction C · Ops","x":0,"y":1820,"w":1500,"h":780,"page":"page-2"}],
+ "launch":{"view":"canvas","page":"page-1"}}

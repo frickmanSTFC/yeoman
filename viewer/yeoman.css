@@ -189,6 +189,65 @@
   [data-theme="starfleet"] .controls input { background: var(--bg); border-color: var(--line); }
   [data-theme="starfleet"] #lootDetail, [data-theme="starfleet"] #mileChart { background: var(--bg2); border-radius: 6px; padding: .6rem .8rem; }
 
+
+  /* starfleet refresh (2026-09-09): a top band joins the rail in an elbow and carries a readout; every
+     section is an outlined frame whose title is the filled strip on top; controls are outlined pills;
+     digits in a mono face; gauges ticked. Same palette as before. */
+  [data-theme="starfleet"] body { padding-top: calc(1.5rem + 44px); }
+  [data-theme="starfleet"] .topband { position: fixed; left: 1.5rem; right: 1.5rem; top: 1.5rem; height: 30px; background: var(--accent);
+      border-radius: 27px 0 0 0; z-index: 2; display: flex; justify-content: flex-end; align-items: center; }
+  [data-theme="starfleet"] .topband span { background: var(--accent); color: var(--accent-ink); font: 700 13px/30px var(--display); letter-spacing: .16em;
+      text-transform: uppercase; padding: 0 16px; border-left: 4px solid var(--bg); }
+  .topband { display: none; }
+  [data-theme="starfleet"] header { top: calc(1.5rem + 36px); }
+  [data-theme="starfleet"] h1 { border-radius: 4px 4px 4px 27px; }
+  [data-theme="starfleet"] nav button { background: transparent !important; border: 2px solid var(--accent2); color: var(--accent2); opacity: 1; border-radius: 999px; height: 40px; }
+  [data-theme="starfleet"] nav button:nth-child(2) { border-color: var(--accent3); color: var(--accent3); }
+  [data-theme="starfleet"] nav button:nth-child(3) { border-color: var(--accent); color: var(--accent); }
+  [data-theme="starfleet"] nav button:nth-child(4) { border-color: var(--accent4); color: var(--accent4); }
+  [data-theme="starfleet"] nav button:nth-child(5) { border-color: var(--accent3); color: var(--accent3); }
+  [data-theme="starfleet"] nav button:nth-child(6) { border-color: var(--accent2); color: var(--accent2); }
+  [data-theme="starfleet"] nav button:nth-child(7) { border-color: var(--accent5); color: var(--accent5); }
+  [data-theme="starfleet"] nav button:last-child { border-color: var(--muted); color: var(--muted); }
+  [data-theme="starfleet"] nav button.on { background: var(--accent) !important; color: var(--accent-ink); border-color: var(--accent); }
+  [data-theme="starfleet"] nav button.redalert { border-color: #d8351f; }
+  /* section title = filled strip, the block under it = outlined frame */
+  [data-theme="starfleet"] h2 { margin: 1.4rem 0 0; padding: .35rem 1.2rem; background: var(--accent); color: var(--accent-ink); border-radius: 14px 14px 0 0; position: static; }
+  [data-theme="starfleet"] h2::before { display: none; }
+  [data-theme="starfleet"] h2 small { color: var(--accent-ink); opacity: .75; }
+  [data-theme="starfleet"] h2 + table, [data-theme="starfleet"] h2 + #evDailies, [data-theme="starfleet"] h2 + .grp {
+      border: 2px solid var(--accent); border-top: 0; border-radius: 0 0 6px 6px; padding: .4rem .8rem .8rem; box-sizing: border-box; background: var(--bg2); }
+  [data-theme="starfleet"] h2 + table { border-collapse: separate; border-spacing: 0; }
+  [data-theme="starfleet"] h2 + .grp { border-radius: 0 0 6px 6px; margin-bottom: 0; }
+  [data-theme="starfleet"] #lootDetail, [data-theme="starfleet"] #repDetail, [data-theme="starfleet"] #mileChart {
+      border: 2px solid var(--accent3); border-radius: 14px 14px 6px 6px; padding: .2rem 1rem .8rem; margin-top: 1.2rem; background: var(--bg2); }
+  [data-theme="starfleet"] #lootDetail:empty, [data-theme="starfleet"] #repDetail:empty, [data-theme="starfleet"] #mileChart:empty { display: none; }
+  [data-theme="starfleet"] #lootDetail h2, [data-theme="starfleet"] #repDetail h2 { background: none; color: var(--accent3); padding: .6rem 0 .2rem; margin: 0; border-radius: 0; }
+  [data-theme="starfleet"] #lootDetail h2 small, [data-theme="starfleet"] #repDetail h2 small { color: var(--muted); opacity: 1; }
+  [data-theme="starfleet"] th { color: var(--accent); font-size: .74rem; border-bottom: 1px solid var(--line); }
+  [data-theme="starfleet"] td { border-bottom: 1px dashed #221a12; }
+  [data-theme="starfleet"] td.num { font: 500 .9rem 'JetBrains Mono', Consolas, monospace; color: var(--accent2); }
+  [data-theme="starfleet"] .tiles { margin-top: 1rem; }
+  [data-theme="starfleet"] .tile { border: 2px solid var(--accent); border-left-width: 2px; border-radius: 14px 14px 6px 6px; background: var(--bg2); }
+  [data-theme="starfleet"] .tile b { font-family: 'JetBrains Mono', Consolas, monospace; font-weight: 600; font-size: 1.5rem; color: var(--accent2); }
+  [data-theme="starfleet"] .controls { border: 2px solid var(--accent3); border-radius: 999px; padding: .5rem 1.2rem; }
+  [data-theme="starfleet"] .controls select, [data-theme="starfleet"] .controls input, [data-theme="starfleet"] .grp select, [data-theme="starfleet"] .grp input:not([type=checkbox]) {
+      border: 1px solid var(--accent3); border-radius: 999px; background: transparent; color: var(--accent2); padding: .2rem .7rem; }
+  [data-theme="starfleet"] .controls button, [data-theme="starfleet"] .grp button, [data-theme="starfleet"] button.clear {
+      border: 2px solid var(--accent); border-radius: 999px; background: transparent; color: var(--accent); font: 700 .8rem var(--display); letter-spacing: .1em; text-transform: uppercase; padding: .2rem .9rem; }
+  [data-theme="starfleet"] .bar { height: 10px; width: 100px; border-radius: 2px; background: repeating-linear-gradient(90deg, #2a1f14 0 6px, #0e0a07 6px 8px); border: 1px solid #3a2a1c; }
+  [data-theme="starfleet"] .bar > i { border-radius: 0; background: repeating-linear-gradient(90deg, var(--accent2) 0 6px, transparent 6px 8px); }
+  [data-theme="starfleet"] .bar.hp > i { background: repeating-linear-gradient(90deg, var(--spend) 0 6px, transparent 6px 8px); }
+  [data-theme="starfleet"] .bar.sh > i { background: repeating-linear-gradient(90deg, var(--accent3) 0 6px, transparent 6px 8px); }
+  [data-theme="starfleet"] .dgroup .bar { width: 100%; max-width: 56px; }
+  [data-theme="starfleet"] .dgroup td.num { font-size: .78rem; }
+  [data-theme="starfleet"] .pill { border-radius: 999px; background: transparent; border: 1px solid var(--accent); color: var(--accent2); }
+  [data-theme="starfleet"] .pill.captain { background: var(--accent); color: var(--accent-ink); }
+  [data-theme="starfleet"] .dgroup table { border: 0; padding: 0; background: transparent; }
+  [data-theme="starfleet"] .dgroup th { color: var(--accent2); }
+  [data-theme="starfleet"] tr.grouphead td { background: #17110c; color: var(--accent2); }
+  [data-theme="starfleet"] .ver span { border-radius: 4px 4px 27px 4px; }
+
   /* klingon: black screens in red frames on riveted iron; red is the ink, yellow marks what is live */
   [data-theme="klingon"] body { padding-left: 190px; background:
       radial-gradient(ellipse at 30% 0%, rgba(120,30,15,.35), transparent 55%),

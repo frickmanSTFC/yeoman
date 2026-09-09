@@ -39,6 +39,7 @@
 </nav>
 <div class="ver"><span id="ver"></span></div>
 </header>
+<div class="topband"><span id="band">Yeoman</span></div>
 
 <section id="tab-fleets">
 <div id="status">waiting for game…</div>
@@ -494,6 +495,7 @@ async function tick() {
     const age = Math.round(Date.now()/1000 - d.updated);
     document.getElementById("status").textContent =
       `${d.fleets.length} ships · updated ${age}s ago` + (age > 15 ? " · game not running?" : "");
+    document.getElementById("band").textContent = `Fleet operations · ${d.fleets.length} ships · updated ${age}s ago`;
     const mining = [], other = [];
     for (const f of d.fleets) {
       const reasons = alertsFor(f); raise(f, reasons);
