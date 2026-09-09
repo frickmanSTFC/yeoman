@@ -65,7 +65,7 @@ const RESEARCH = (() => {
 
   // requirement kinds no log covers: shown as a note, never treated as a blocker
   const notes = next => (next?.req || []).filter(([t]) => REQ[t])
-    .map(([t, , l]) => `${REQ[t]} ${l}`).join(", ");
+    .map(([t, , l]) => REQ[t] + (l < 100000 ? ` ${l}` : "")).join(", ");   // a huge "level" is an id, not a rank
 
   // --- render ----------------------------------------------------------------------------------
   function render() {

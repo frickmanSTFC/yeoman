@@ -137,6 +137,8 @@ const EVENTS = (() => {
     }).join("") || `<tr><td colspan="6" class="dim">${data.events.length ? "nothing in this view" : "no events yet — start the game with the current mod, then refresh"}</td></tr>`;
 
     const sel = list.find(e => e.id == selected);
+    document.getElementById("evDetailHead").hidden = !sel;
+    document.getElementById("evDetailTable").hidden = !sel;
     document.getElementById("evDetailHead").innerHTML = sel ? `${name(sel)} <small class="dim">milestones · ${compact(pts(sel))} points · ${left(sel.remaining_s)} left</small>` : "";
     document.getElementById("evDetail").innerHTML = sel ? (sel.tiers || []).map((t, i) => {
       const done = tierDone(sel, t), pct = t.score ? Math.min(100, 100 * pts(sel) / t.score) : 0;

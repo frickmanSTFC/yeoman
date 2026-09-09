@@ -19,6 +19,10 @@ battle results, in a browser tab, updated every few seconds while you play. Noth
 | **Battles** | Each battle: system, your ship and crew, opponent and level, result (kill, no kill, ship lost) and hull damage dealt. Summarised from the game's own battle journals. |
 | **Settings** | Theme (five looks, including a Klingon one), alarm, game folder, battle-journal on/off and retention, names and icons refresh, update check and one-click upgrade, About page. |
 
+![Events tab](docs/img/events.png)
+
+![Research tab](docs/img/research.png)
+
 ![Loot tab](docs/img/loot.png)
 
 ![Milestones tab](docs/img/mile.png)
