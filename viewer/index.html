@@ -474,6 +474,11 @@ async function tick() {
       const reasons = alertsFor(f); raise(f, reasons);
       (f.state === "mining" ? mining : other).push(f.state === "mining" ? miningRow(f, reasons) : otherRow(f));
     }
+    // red alert: any uncleared ship with a reason lights the Fleets tab and the window title,
+    // whether or not the beep is on
+    const red = d.fleets.some(f => alertsFor(f).length && !muted.has(f.id));
+    document.getElementById("navFleets").classList.toggle("redalert", red);
+    document.title = red ? "⚠ Yeoman" : "Yeoman";
     document.getElementById("mining").innerHTML = mining.join("") || `<tr><td colspan="12" class="dim">no ships mining</td></tr>`;
     document.getElementById("other").innerHTML = other.join("") || `<tr><td colspan="11" class="dim">none</td></tr>`;
   } catch (e) {

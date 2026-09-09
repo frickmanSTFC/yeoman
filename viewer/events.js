@@ -7,6 +7,12 @@
 const EVENTS = (() => {
   let data = {updated: 0, events: []}, view = "running", kind = "milestone", selected = null;
 
+  // dailies you care about, starred by name (ids change with the day; names do not)
+  const store = typeof localStorage !== "undefined" ? localStorage : null;
+  const stars = new Set((() => { try { return JSON.parse(store?.getItem("evStars") || "[]"); } catch { return []; } })());
+  const saveStars = () => store?.setItem("evStars", JSON.stringify([...stars]));
+  const starred = o => stars.has(o.name);
+
   // The game's own event names end in a type tag: SMS / AMS = solo / alliance milestone,
   // SLB / ALB = solo / alliance leaderboard. Split it off into a kind of its own.
   const KINDS = {SMS: "solo milestone", AMS: "alliance milestone", SLB: "solo leaderboard", ALB: "alliance leaderboard"};
@@ -69,6 +75,7 @@ const EVENTS = (() => {
     const goals = dailies.map(e => ({id: e.id, name: e.name, cur: pts(e),
       target: (e.tiers || [])[0]?.score || 0, claimable: e.IsClaimable, done: e.IsComplete}));
     const done = goals.filter(g => g.done).length;
+    const starList = goals.filter(starred), starDone = starList.filter(g => g.done).length;
     const reset = Math.min(...dailies.map(e => e.remaining_s ?? Infinity));
     const list = filtered().sort((a, b) => {
       const o = {claim: 0, running: 1, done: 2, ended: 3};
@@ -77,7 +84,9 @@ const EVENTS = (() => {
     const running = list.filter(e => stateOf(e) === "running"), claims = data.events.filter(e => stateOf(e) === "claim");
 
     document.getElementById("evStats").innerHTML = `
-      <div class="tile"><span>dailies</span><b>${goals.length ? `${done} / ${goals.length}` : "—"}</b>
+      <div class="tile"><span>starred dailies</span><b>${starList.length ? `${starDone} / ${starList.length}` : "—"}</b>
+        <em>${starList.length ? (starDone === starList.length ? "all done" : `${starList.length - starDone} left`) : "star the ones that matter"}</em></div>
+      <div class="tile"><span>all dailies</span><b>${goals.length ? `${done} / ${goals.length}` : "—"}</b>
         <em>${goals.length ? `${goals.length - done} left${isFinite(reset) ? ", " + left(reset) : ""}` : "no daily goals seen yet"}</em></div>
       <div class="tile"><span>running</span><b>${running.length}</b>
         <em>${running[0] ? "next ends in " + left(running[0].remaining_s) : ""}</em></div>
@@ -90,14 +99,15 @@ const EVENTS = (() => {
     const byGroup = groups.map(([label, re]) => ({label, rows: []}));
     for (const o of goals) byGroup[groups.findIndex(([, re]) => re.test(o.name || ""))].rows.push(o);
     const row = o => `<tr class="${o.done ? "gdone" : ""}">
+      <td class="star ${starred(o) ? "on" : ""}" data-star="${(o.name || "").replace(/"/g, "&quot;")}" title="star: counts in the starred tile">${starred(o) ? "★" : "☆"}</td>
       <td class="${o.done ? "ok" : "no"}">${o.done ? "✓" : "·"}</td>
       <td>${o.name || `Goal ${o.id}`}</td>
       <td class="num">${o.target ? `${compact(o.cur)} / ${compact(o.target)}` : ""}</td>
       <td>${o.target ? `<span class="bar"><i style="width:${Math.min(100, 100 * o.cur / o.target)}%"></i></span>` : ""}</td></tr>`;
     // factions side by side on top; everything else below them, split into columns of its own
     const table = (label, rows, all) => `<div class="dgroup"><table class="loot" style="min-width:0">
-        <colgroup><col style="width:1.4rem"><col style="width:auto"><col style="width:6.5rem"><col style="width:4.2rem"></colgroup>
-        <thead><tr><th colspan="4">${label}${all ? ` <span class="gtot">${all.filter(o => o.done).length} / ${all.length}</span>` : ""}</th></tr></thead>
+        <colgroup><col style="width:1.4rem"><col style="width:1.4rem"><col style="width:auto"><col style="width:6.5rem"><col style="width:4.2rem"></colgroup>
+        <thead><tr><th colspan="5">${label}${all ? ` <span class="gtot">${all.filter(o => o.done).length} / ${all.length}</span>` : ""}</th></tr></thead>
         <tbody>${rows.map(row).join("")}</tbody></table></div>`;
     const factions = byGroup.slice(0, -1).filter(g => g.rows.length);
     const general = byGroup[byGroup.length - 1].rows;
@@ -157,13 +167,18 @@ const EVENTS = (() => {
     kb.value = kind = localStorage.getItem("evKind") || "milestone";
     kb.onchange = () => { kind = kb.value; localStorage.setItem("evKind", kind); render(); };
     document.getElementById("evReload").onclick = load;
+    document.getElementById("evDailies").onclick = e => {
+      const td = e.target.closest("td.star"); if (!td) return;
+      const n = td.dataset.star;
+      stars.has(n) ? stars.delete(n) : stars.add(n); saveStars(); render();
+    };
     document.getElementById("evBody").onclick = e => {
       const tr = e.target.closest("tr[data-id]"); if (!tr) return;
       selected = tr.dataset.id; render();
     };
   }
 
-  return {init, load, render, stateOf, goalDone, kindOf, name, pts, setData: d => { data = d; }};
+  return {init, load, render, stateOf, goalDone, kindOf, name, pts, stars, setData: d => { data = d; }};
 })();
 
 if (typeof module !== "undefined") module.exports = EVENTS;   // for test_events.js

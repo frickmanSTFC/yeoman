@@ -132,6 +132,12 @@
   .chip.claim { background: var(--gain); color: var(--accent-ink); } .chip.running { background: var(--accent4); color: var(--accent-ink); }
   .chip.ended { background: var(--bg3); color: var(--muted); } .chip.todo { background: var(--bg3); color: var(--muted); border: 1px solid var(--line); }
   .ok { color: var(--gain); } .no { color: var(--dim); } .bar.wide { width: 140px; }
+  /* red alert: a ship needs you (protected cargo full or node empty) and nobody has cleared it */
+  @keyframes redalert { from { background: #d8351f; } to { background: #6a1108; } }
+  nav button.redalert { animation: redalert .9s ease-in-out infinite alternate; background: #d8351f !important; color: #fff !important; opacity: 1 !important; }
+  /* starred dailies */
+  .dgroup td.star { cursor: pointer; color: var(--dim); text-align: center; padding: .25rem 0; user-select: none; }
+  .dgroup td.star.on { color: var(--gain); }
   .dgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr)); gap: .8rem 1rem; align-items: start; }
   .dgroup table { min-width: 0; table-layout: fixed; } .dgroup th { text-align: left; } .dgroup td { padding: .25rem .4rem; }
   .dgroup td:first-child { text-align: center; padding: .25rem 0; } .dgroup td:nth-child(2) { white-space: normal; }
