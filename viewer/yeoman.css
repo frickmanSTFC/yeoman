@@ -46,7 +46,8 @@
   th, td { padding: .45rem .7rem; text-align: left; border-bottom: 1px solid var(--line); white-space: nowrap; vertical-align: top; }
   th { font: 700 .75rem var(--display); letter-spacing: var(--track); text-transform: var(--caps); color: var(--accent); border-bottom-width: 2px; }
   [data-theme="daylight"] th { font: 500 .8rem var(--font); color: var(--muted); border-bottom-width: 1px; }
-  td.num { text-align: right; font-variant-numeric: tabular-nums; color: var(--num); }
+  th.num, td.num { text-align: right; }
+  td.num { font-variant-numeric: tabular-nums; color: var(--num); }
   td.wrap { white-space: normal; }
   #tab-fleets td.wrap { min-width: 24rem; }
   section { overflow-x: auto; }
