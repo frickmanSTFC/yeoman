@@ -102,12 +102,12 @@ const EVENTS = (() => {
         <td><span class="chip ${st}">${st}</span></td>
         <td>${st === "ended" ? "—" : left(e.remaining_s)}</td>
         <td>${tiersAll(e) ? `${tiersDone(e)} / ${tiersAll(e)} <span class="bar wide"><i style="width:${100 * tiersDone(e) / tiersAll(e)}%"></i></span>` : ""}</td>
-        <td class="num">${compactpts(e)}</td>
+        <td class="num">${compact(pts(e))}</td>
         <td class="num">${toNext ? compact(toNext) : ""}</td></tr>`;
     }).join("") || `<tr><td colspan="6" class="dim">${data.events.length ? "nothing in this view" : "no events yet — start the game with the current mod, then refresh"}</td></tr>`;
 
     const sel = list.find(e => e.id == selected);
-    document.getElementById("evDetailHead").innerHTML = sel ? `${name(sel)} <small class="dim">milestones · ${compactpts(sel)} points · ${left(sel.remaining_s)} left</small>` : "";
+    document.getElementById("evDetailHead").innerHTML = sel ? `${name(sel)} <small class="dim">milestones · ${compact(pts(sel))} points · ${left(sel.remaining_s)} left</small>` : "";
     document.getElementById("evDetail").innerHTML = sel ? (sel.tiers || []).map((t, i) => {
       const done = tierDone(sel, t), pct = t.score ? Math.min(100, 100 * pts(sel) / t.score) : 0;
       const st = t.claimable || t.state === 2 ? "claim" : done ? "done" : "running";
@@ -133,6 +133,8 @@ const EVENTS = (() => {
   }
 
   function init() {
+    // the mod rewrites the file every few seconds; re-read it while the tab is on screen
+    setInterval(() => { if (!document.getElementById("tab-ev").hidden && data.events.length) load(); }, 30000);
     document.getElementById("evView").onchange = e => { view = e.target.value; render(); };
     const kb = document.getElementById("evKind");
     kb.value = kind = localStorage.getItem("evKind") || "milestone";
@@ -144,7 +146,7 @@ const EVENTS = (() => {
     };
   }
 
-  return {init, load, stateOf, goalDone, kindOf, name, pts, setData: d => { data = d; }};
+  return {init, load, render, stateOf, goalDone, kindOf, name, pts, setData: d => { data = d; }};
 })();
 
 if (typeof module !== "undefined") module.exports = EVENTS;   // for test_events.js
