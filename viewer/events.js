@@ -5,7 +5,7 @@
 // claimable, complete, and how far along each milestone and objective is.
 
 const EVENTS = (() => {
-  let data = {updated: 0, events: []}, view = "running", kind = "milestone", selected = null;
+  let data = {updated: 0, events: []}, view = "running", kind = "milestone", selected = null, starOnly = false;
 
   // dailies you care about, starred by name (ids change with the day; names do not)
   const store = typeof localStorage !== "undefined" ? localStorage : null;
@@ -97,7 +97,10 @@ const EVENTS = (() => {
     // one column per group; the faction ones are told apart by name, the game exports no faction flag
     const groups = [["Federation", /federation/i], ["Klingon", /klingon/i], ["Romulan", /romulan/i], ["Ex-Borg", /exborg|ex-borg/i], ["General", /./]];
     const byGroup = groups.map(([label, re]) => ({label, rows: []}));
-    for (const o of goals) byGroup[groups.findIndex(([, re]) => re.test(o.name || ""))].rows.push(o);
+    for (const o of goals) {
+      if (starOnly && !starred(o)) continue;
+      byGroup[groups.findIndex(([, re]) => re.test(o.name || ""))].rows.push(o);
+    }
     const row = o => `<tr class="${o.done ? "gdone" : ""}">
       <td class="star ${starred(o) ? "on" : ""}" data-star="${(o.name || "").replace(/"/g, "&quot;")}" title="star: counts in the starred tile">${starred(o) ? "★" : "☆"}</td>
       <td class="${o.done ? "ok" : "no"}">${o.done ? "✓" : "·"}</td>
@@ -117,7 +120,7 @@ const EVENTS = (() => {
       ? `<div class="dgrid">${factions.map(g => table(g.label, g.rows, g.rows)).join("")}</div>`
         + (general.length ? `<div class="dgrid" style="margin-top:.8rem">${Array.from({length: cols}, (_, i) =>
             table(i ? "&nbsp;" : "General", general.slice(i * per, (i + 1) * per), i ? null : general)).join("")}</div>` : "")
-      : `<p class="dim">no daily goals in the list yet — open the events screen in the game once</p>`;
+      : `<p class="dim">${starOnly && goals.length ? "no starred dailies yet — untick the box and click a star" : "no daily goals in the list yet — open the events screen in the game once"}</p>`;
 
     if (selected == null || !list.some(e => e.id == selected)) selected = list[0]?.id ?? null;
     document.getElementById("evBody").innerHTML = list.map(e => {
@@ -167,6 +170,9 @@ const EVENTS = (() => {
     kb.value = kind = localStorage.getItem("evKind") || "milestone";
     kb.onchange = () => { kind = kb.value; localStorage.setItem("evKind", kind); render(); };
     document.getElementById("evReload").onclick = load;
+    const so = document.getElementById("evStarOnly");
+    so.checked = starOnly = localStorage.getItem("evStarOnly") === "1";
+    so.onchange = () => { starOnly = so.checked; localStorage.setItem("evStarOnly", starOnly ? "1" : "0"); render(); };
     document.getElementById("evDailies").onclick = e => {
       const td = e.target.closest("td.star"); if (!td) return;
       const n = td.dataset.star;
