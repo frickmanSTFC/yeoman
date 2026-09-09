@@ -21,4 +21,6 @@ assert.strictEqual(E.kindOf({name: "Sector Strike - SMS"}), "SMS");
 assert.strictEqual(E.kindOf({name: "Interstellar Dominance Meta - SLB"}), "SLB");
 assert.strictEqual(E.kindOf({name: "Daily Goal"}), "");
 assert.strictEqual(E.name({name: "Sector Strike - SMS"}), "Sector Strike");
+assert.strictEqual(E.pts({points: -2100000000, next: {cur: 2200000000, max: 0}}), 2200000000, "wrapped counter falls back to progress");
+assert.strictEqual(E.pts({points: 540, next: {cur: 540, max: 0}}), 540);
 console.log("events rules OK");

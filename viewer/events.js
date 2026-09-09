@@ -32,6 +32,9 @@ const EVENTS = (() => {
 
   // --- classification ----------------------------------------------------------------------------
   const isDaily = e => e.IsDailyGoalsEvent || e.IsDailyMilestone;
+  // the game's points counter is a 32-bit int and wraps on big alliance events; the progress
+  // figure is a double and carries the same number safely, so prefer it
+  const pts = e => (e.next && e.next.cur > 0 && (e.points < 0 || e.next.cur > e.points)) ? e.next.cur : (e.points || 0);
   // chip text, in the order that matters: something to collect beats everything else.
   // The game's "active" flags stay false for events it merely lists, so running means not closed
   // and still on the clock.
@@ -43,7 +46,7 @@ const EVENTS = (() => {
     return "ended";
   }
   // milestone tiers carry the score they need; reached = the game says so, or points are past it
-  const tierDone = (e, t) => t.state === 3 || t.state === 2 || (e.points || 0) >= t.score;
+  const tierDone = (e, t) => t.state === 3 || t.state === 2 || pts(e) >= t.score;
   const tiersDone = e => (e.tiers || []).filter(t => tierDone(e, t)).length;
   const tiersAll = e => (e.tiers || []).length;
   const goalDone = o => o.target > 0 ? o.cur >= o.target : o.claimable;
@@ -63,7 +66,7 @@ const EVENTS = (() => {
   function render() {
     // every daily goal is its own small event; it is done when the game marks it complete
     const dailies = data.events.filter(isDaily);
-    const goals = dailies.map(e => ({id: e.id, name: e.name, cur: e.points || 0,
+    const goals = dailies.map(e => ({id: e.id, name: e.name, cur: pts(e),
       target: (e.tiers || [])[0]?.score || 0, claimable: e.IsClaimable, done: e.IsComplete}));
     const done = goals.filter(g => g.done).length;
     const reset = Math.min(...dailies.map(e => e.remaining_s ?? Infinity));
@@ -92,21 +95,21 @@ const EVENTS = (() => {
     if (selected == null || !list.some(e => e.id == selected)) selected = list[0]?.id ?? null;
     document.getElementById("evBody").innerHTML = list.map(e => {
       const st = stateOf(e), n = e.next || {};
-      const nextTier = (e.tiers || []).map(t => t.score).filter(sc => sc > (e.points || 0)).sort((a, b) => a - b)[0];
-      const toNext = nextTier ? nextTier - (e.points || 0) : 0;
+      const nextTier = (e.tiers || []).map(t => t.score).filter(sc => sc > pts(e)).sort((a, b) => a - b)[0];
+      const toNext = nextTier ? nextTier - pts(e) : 0;
       return `<tr data-id="${e.id}" class="${e.id == selected ? "sel" : ""}">
         <td>${name(e)} <small class="dim">${kindLabel(e)}</small></td>
         <td><span class="chip ${st}">${st}</span></td>
         <td>${st === "ended" ? "—" : left(e.remaining_s)}</td>
         <td>${tiersAll(e) ? `${tiersDone(e)} / ${tiersAll(e)} <span class="bar wide"><i style="width:${100 * tiersDone(e) / tiersAll(e)}%"></i></span>` : ""}</td>
-        <td class="num">${compact(e.points || 0)}</td>
+        <td class="num">${compactpts(e)}</td>
         <td class="num">${toNext ? compact(toNext) : ""}</td></tr>`;
     }).join("") || `<tr><td colspan="6" class="dim">${data.events.length ? "nothing in this view" : "no events yet — start the game with the current mod, then refresh"}</td></tr>`;
 
     const sel = list.find(e => e.id == selected);
-    document.getElementById("evDetailHead").innerHTML = sel ? `${name(sel)} <small class="dim">milestones · ${compact(sel.points || 0)} points · ${left(sel.remaining_s)} left</small>` : "";
+    document.getElementById("evDetailHead").innerHTML = sel ? `${name(sel)} <small class="dim">milestones · ${compactpts(sel)} points · ${left(sel.remaining_s)} left</small>` : "";
     document.getElementById("evDetail").innerHTML = sel ? (sel.tiers || []).map((t, i) => {
-      const done = tierDone(sel, t), pct = t.score ? Math.min(100, 100 * (sel.points || 0) / t.score) : 0;
+      const done = tierDone(sel, t), pct = t.score ? Math.min(100, 100 * pts(sel) / t.score) : 0;
       const st = t.claimable || t.state === 2 ? "claim" : done ? "done" : "running";
       return `<tr>
       <td>Milestone ${i + 1}</td>
@@ -141,7 +144,7 @@ const EVENTS = (() => {
     };
   }
 
-  return {init, load, stateOf, goalDone, kindOf, name, setData: d => { data = d; }};
+  return {init, load, stateOf, goalDone, kindOf, name, pts, setData: d => { data = d; }};
 })();
 
 if (typeof module !== "undefined") module.exports = EVENTS;   // for test_events.js
