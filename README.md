@@ -52,8 +52,12 @@ The page is plain HTML and JavaScript, no framework. The server is Python's stan
 
 From then on, start the game. Yeoman opens on its own.
 
-Every game update breaks the mod until a new build is made, so expect a new zip after game patches.
-Update by closing the game, replacing `Yeoman.exe` and running it once.
+**Upgrading:** Settings tab, Update, "check now", then "install and restart". Yeoman fetches the newest
+release from GitHub, swaps its own exe and restarts. The game can stay open; the new mod goes in the next
+time you close the game and Yeoman runs. By hand: unzip the new `Yeoman.exe` over the old one and run it.
+Do not run it straight from the zip window, that runs a temporary copy.
+
+Every game update breaks the mod until a new build is made, so expect a new release after game patches.
 
 Details, settings and file locations: [viewer/README.md](viewer/README.md).
 

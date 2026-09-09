@@ -11,6 +11,25 @@ MOVED = ("community_patch_fleets.json", "community_patch_resources.json", "commu
          "battles")
 
 
+class _Tee:
+    """Console output also lands in yeoman.log next to the exe, so a closed window is not lost."""
+    def __init__(self, *streams): self.streams = streams
+    def write(self, s):
+        for t in self.streams:
+            try: t.write(s); t.flush()
+            except Exception: pass
+    def flush(self): pass
+
+
+def log_to_file():
+    try:
+        f = open(os.path.join(paths.BASE, "yeoman.log"), "a", encoding="utf-8", buffering=1)
+        f.write(f"\n--- {time.strftime('%Y-%m-%d %H:%M:%S')} ---\n")
+        sys.stdout = _Tee(sys.stdout, f); sys.stderr = _Tee(sys.stderr, f)
+    except OSError:
+        pass
+
+
 def say(msg):
     print(f"  {msg}", flush=True)
 
@@ -121,8 +140,20 @@ def register_autostart():
     settings_api.write_toml({"exe": sys.executable})
 
 
+def check_update_later():
+    """Ask GitHub once, off the main path, and print one line if there is something newer."""
+    import threading, update
+    def run():
+        r = update.check()
+        if r.get("available"):
+            say(f"update available: {r['name']} (Settings tab > Update)")
+    threading.Thread(target=run, daemon=True).start()
+
+
 def main():
+    log_to_file()
     print("Yeoman")
+    import update; update.cleanup()
     if already_running():
         say("Yeoman is already running; opening the page")
         import webbrowser, serve
@@ -135,6 +166,7 @@ def main():
     move_old_exports(game)
     refresh_names()
     refresh_icons()
+    check_update_later()
     import serve
     serve.run()
 
@@ -145,5 +177,6 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         pass
     except Exception as e:
+        import traceback; traceback.print_exc()
         print(f"\nSomething went wrong: {e}")
         input("Press Enter to close.")

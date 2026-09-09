@@ -11,12 +11,15 @@ New-Item -ItemType Directory -Force (Join-Path $stage "web") | Out-Null
 New-Item -ItemType Directory -Force (Join-Path $stage "mod") | Out-Null
 Copy-Item (Join-Path $here "index.html"), (Join-Path $here "about.html"), (Join-Path $here "yeoman.css"), (Join-Path $here "*.js") (Join-Path $stage "web") -Exclude "test_*.js"
 Copy-Item $dll (Join-Path $stage "mod\version.dll")
+# the commit this build comes from; CI passes it, a local build leaves it empty
+$sha = if ($env:YEOMAN_SHA) { $env:YEOMAN_SHA } else { "" }
+Set-Content -Path (Join-Path $stage "build_info.json") -Value ('{"sha":"' + $sha + '"}') -Encoding ascii
 
 Push-Location $here
 try {
   python -m PyInstaller --noconfirm --clean --onefile --name Yeoman --console `
     --distpath (Join-Path $here "dist") --workpath (Join-Path $here "build\pyi") --specpath (Join-Path $here "build") `
-    --add-data "$stage\web;web" --add-data "$stage\mod;mod" `
+    --add-data "$stage\web;web" --add-data "$stage\mod;mod" --add-data "$stage\build_info.json;." `
     --collect-all UnityPy --collect-all fmod_toolkit --collect-all archspec `
     app.py
 } finally { Pop-Location }

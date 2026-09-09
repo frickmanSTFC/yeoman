@@ -101,7 +101,24 @@ def status():
         "names": file_info(os.path.join(paths.DATA, "names.json")),
         "icons": {**(file_info(os.path.join(paths.DATA, "icons.json")) or {}), "count": _icon_count()},
         "busy": dict(_busy),
+        "build": paths.BUILD_SHA,
+        "update": _update_cache(),
     }
+
+
+def _update_cache():
+    """Last known answer from GitHub without asking again; the page asks with POST /update check."""
+    import update
+    return update._last["result"]
+
+
+def update_action(what):
+    import update
+    if what == "check":
+        return update.check(force=True)
+    if what == "apply":
+        return {"msg": update.apply()}
+    return {"error": "unknown action"}
 
 
 def _icon_count():

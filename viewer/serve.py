@@ -77,6 +77,8 @@ class H(http.server.SimpleHTTPRequestHandler):
         body = json.loads(self.rfile.read(n) or b"{}")
         if self.path.startswith("/settings"):
             return self.reply(json.dumps(settings_api.apply(body)).encode())
+        if self.path.startswith("/update"):
+            return self.reply(json.dumps(settings_api.update_action(body.get("what"))).encode())
         if self.path.startswith("/refresh"):
             return self.reply(json.dumps({"msg": settings_api.refresh(body.get("what"))}).encode())
         self.send_error(404)
@@ -135,9 +137,14 @@ class H(http.server.SimpleHTTPRequestHandler):
         pass
 
 
+SRV = None   # the live server, so update.py can close it before handing over to a new exe
+
+
 def run():
+    global SRV
     handler = functools.partial(H, directory=paths.WEB)
     with http.server.ThreadingHTTPServer(("127.0.0.1", PORT), handler) as srv:
+        SRV = srv
         webbrowser.open(f"http://localhost:{PORT}/")
         print(f"  page: http://localhost:{PORT}/   (close this window to stop)")
         srv.serve_forever()

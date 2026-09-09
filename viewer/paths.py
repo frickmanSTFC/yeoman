@@ -16,6 +16,15 @@ DATA = os.path.join(BASE, "data")
 ICONS = os.path.join(DATA, "icons")
 SETTINGS = os.path.join(BASE, "settings.json")
 DEFAULT_GAME = r"C:\Games\Star Trek Fleet Command\Star Trek Fleet Command\default\game"
+# commit sha baked in at build time (CI sets YEOMAN_SHA); empty for a local build
+def _build_sha():
+    try:
+        import json
+        return json.load(open(os.path.join(getattr(sys, "_MEIPASS", BASE), "build_info.json")))["sha"]
+    except Exception:
+        return ""
+BUILD_SHA = _build_sha()
+
 EXPORT_DIR = "yeoman"       # must match FILE_DEF_EXPORT_DIR in the mod
 
 

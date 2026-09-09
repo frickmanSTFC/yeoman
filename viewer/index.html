@@ -320,6 +320,13 @@
   <div><span>Icons</span><div><span class="dim" id="setIcons"></span><button data-refresh="icons">refresh</button><span class="dim">first export takes a few minutes</span></div></div>
 </div>
 
+<h2>Update</h2>
+<div class="grp">
+  <div><span>Installed</span><div><span class="dim" id="setBuild"></span></div></div>
+  <div><span>Latest release</span><div><span class="dim" id="setLatest">not checked yet</span><button id="setCheck">check now</button><button id="setUpdate" hidden>install and restart</button></div></div>
+  <p class="dim">Downloads the newest Yeoman.exe from GitHub into this folder and restarts. The game can stay open; the new mod goes in the next time the game is closed.</p>
+</div>
+
 <h2>About</h2>
 <div class="grp">
   <div><span>Help</span><div><a href="about.html#faq"><button>FAQ</button></a><a href="about.html#license"><button>License</button></a><a href="about.html#thanks"><button>Thanks</button></a></div></div>
@@ -553,9 +560,17 @@ const SET = {
     document.getElementById("setBatFiles").textContent = `${s.battles.files.toLocaleString()} files in yeoman\\battles`;
     document.getElementById("setNames").textContent = s.busy.names || (s.names ? `refreshed ${this.when(s.names.mtime)}` : "not built yet");
     document.getElementById("setIcons").textContent = s.busy.icons || (s.icons.mtime ? `${s.icons.count.toLocaleString()} icons · refreshed ${this.when(s.icons.mtime)}` : "not built yet");
+    document.getElementById("setBuild").textContent = `v${s.version}` + (s.build ? ` · build ${s.build.slice(0, 7)}` : " · local build");
+    if (s.update) this.showUpdate(s.update);
     if (Object.keys(s.busy).length) setTimeout(() => SET.load(), 3000);
   },
   async load() { this.show(await fetch("/settings.json", {cache: "no-store"}).then(r => r.json())); },
+  showUpdate(u) {
+    const el = document.getElementById("setLatest"), btn = document.getElementById("setUpdate");
+    if (u.error) { el.textContent = "could not reach GitHub (" + u.error + ")"; btn.hidden = true; return; }
+    el.textContent = `${u.name || "latest"} · build ${(u.latest || "").slice(0, 7)}` + (u.available ? " · newer than this one" : u.installed ? " · you have it" : " · cannot compare with a local build");
+    btn.hidden = !u.url || (!u.available && !!u.installed);
+  },
   async post(url, body) {
     return fetch(url, {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(body)}).then(r => r.json());
   },
@@ -567,6 +582,17 @@ document.getElementById("setSave").onclick = async () => {
                 battlejournal_days: Number(document.getElementById("setDays").value) || 0};
   SET.show(await SET.post("/settings", body));
   document.getElementById("setStatus").textContent += " · saved";
+};
+document.getElementById("setCheck").onclick = async () => {
+  document.getElementById("setLatest").textContent = "asking GitHub…";
+  SET.showUpdate(await SET.post("/update", {what: "check"}));
+};
+document.getElementById("setUpdate").onclick = async () => {
+  const el = document.getElementById("setLatest");
+  el.textContent = "downloading…";
+  const r = await SET.post("/update", {what: "apply"});
+  el.textContent = r.msg;
+  if (r.msg.startsWith("update downloaded")) setTimeout(() => location.reload(), 8000);
 };
 for (const b of document.querySelectorAll("button[data-refresh]"))
   b.onclick = async () => { await SET.post("/refresh", {what: b.dataset.refresh}); SET.load(); };

@@ -38,6 +38,8 @@ jobs:
 
       - name: Build Yeoman.exe
         working-directory: viewer
+        env:
+          YEOMAN_SHA: ${{ github.sha }}
         run: |
           pip install pyinstaller UnityPy
           powershell -ExecutionPolicy Bypass -File build.ps1
